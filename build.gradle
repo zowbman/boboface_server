@@ -1,0 +1,56 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+    //maven {url "http://172.17.14.76:8091/nexus/content/repositories/central/"}
+}
+
+dependencies {
+ 	compile project(':boboface_base')
+ 	
+    compile 'org.eclipse.jetty:jetty-webapp:9.3.0.M1'
+    compile 'org.eclipse.jetty:jetty-jsp:9.3.0.M1'
+    compile 'com.google.collections:google-collections:1.0'
+    compile 'ch.qos.logback:logback-classic:1.1.7'
+    
+    compile 'org.springframework:spring-webmvc:4.2.4.RELEASE'
+ 	compile 'org.springframework:spring-context-support:4.2.4.RELEASE'
+ 	compile 'org.springframework:spring-jdbc:4.2.4.RELEASE'
+ 	
+ 	compile 'tk.mybatis:mapper:3.3.7'
+ 	compile 'com.github.pagehelper:pagehelper:4.1.1'
+ 	compile 'com.github.jsqlparser:jsqlparser:0.9.4'
+ 	
+ 	compile 'org.aspectj:aspectjweaver:1.8.7'
+ 	compile 'commons-lang:commons-lang:2.6'
+ 	compile 'org.hibernate:hibernate-validator:5.2.4.Final'
+ 	compile 'org.freemarker:freemarker:2.3.23'
+ 	compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+ 	compile 'org.mybatis:mybatis:3.3.1'
+ 	compile 'org.mybatis:mybatis-spring:1.2.4'
+ 	compile 'mysql:mysql-connector-java:5.1.6'
+ 	compile 'c3p0:c3p0:0.9.1.2'
+}
+
+tasks.withType(JavaCompile) {  
+    options.encoding = "UTF-8"  
+}
+
+task copyLib1(type: Sync, dependsOn: jar) {
+    from configurations.compile
+    from jar.archivePath
+    into 'build/deploy'
+}
+
+task copyLib2(type: Sync, dependsOn: copyLib1) {
+    from 'src/main/webapp'
+    into 'build/deploy/webapp'
+}
+
+task deploy{
+	dependsOn  'copyLib2'
+}
+
+jar.exclude 'logback-test.xml'

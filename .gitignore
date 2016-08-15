@@ -1,0 +1,11 @@
+.gradle
+.settings
+bin
+build
+.classpath
+.tern-project
+boboface_base/.gradle
+boboface_base/.settings
+boboface_base/bin
+boboface_base/build
+boboface_base/.classpath

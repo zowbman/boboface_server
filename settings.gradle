@@ -1,0 +1,2 @@
+include (':boboface_base')
+project (':boboface_base').projectDir = new File(settingsDir,'./boboface_base')

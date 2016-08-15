@@ -1,0 +1,61 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	
+	http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<!-- 加载jdbc.propertise文件的内容，jdbc.propertise文件key有一定的特殊命名规则 -->
+	<context:property-placeholder location="classpath:jdbc/jdbc.properties" ignore-unresolvable="true"/>
+	
+	<!-- 配置数据源，这里使用dbcp连接池也可以是用c3p0连接池  取消 destroy-method="close" 不然停止项目会报错-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"><!-- c3p0 ComboPooledDataSource -->
+		<!-- 数据库连接信息 -->
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<!-- 其他配置 -->
+		<!-- 初始化时获取三个连接，取值应在minPoolSize与maxPoolSize之间。Default:3 -->
+		<!-- 连接池中保留最大连接数。default:3 -->
+		<property name="minPoolSize" value="3"></property>
+		<!-- 连接池中保留最大连接数.default:15 -->
+		<property name="maxPoolSize" value="15"></property>
+		<!-- 当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。default:3 -->
+		<property name="acquireIncrement" value="3"></property>
+		<!-- 控制数据源内加载的PreparedStatements数量。如果maxStatemnts与maxStatementsPerConnection均为0，则缓存被关闭.default:0 -->
+		<property name="maxStatements" value="8"></property>
+		<!-- maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。Default:0 -->
+		<property name="maxStatementsPerConnection" value="5"></property>
+		<!-- 最大空闲时间，1800秒内未使用则连接池被丢弃。若为0则永不丢弃。default:0 -->
+		<property name="maxIdleTime" value="1800"></property>
+	</bean>
+	
+	<!-- sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 加载mybatis的全局配置文件 -->
+		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml"></property>
+	</bean>
+	
+	<!-- mapper扫描器
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		扫描的包路径，如果需要扫描多个包，中间使用半角逗号隔开 
+		<property name="basePackage" value="com.sing.**.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean> -->
+	<!-- 通用mapper -->
+	<bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="com.**.mapper"/>
+	    <property name="markerInterface" value="tk.mybatis.mapper.common.Mapper"></property>
+	    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+</beans>

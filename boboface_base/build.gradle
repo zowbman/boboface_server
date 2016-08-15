@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	mavenCentral()
+    //maven {url "http://nexus.fanxing.kgidc.cn/nexus/content/groups/public/"}
+}
+
+dependencies {
+	compile 'ch.qos.logback:logback-classic:1.1.7'
+	compile 'org.eclipse.jetty:jetty-webapp:9.3.0.M1'
+}
+
+task say <<{
+	println "hello world"
+}
+
+tasks.withType(JavaCompile) {  
+    options.encoding = "UTF-8"  
+}
+
+jar.exclude 'logback-test.xml'

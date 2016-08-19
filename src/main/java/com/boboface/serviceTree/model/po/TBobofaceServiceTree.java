@@ -1,4 +1,4 @@
-package com.boboface.wiki.model.po;
+package com.boboface.serviceTree.model.po;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,18 +9,20 @@ import net.zowbman.base.data.type.conversion.date.vo.DATEFORMAT;
 
 /**
  * 
- * Title:TBobofaceWikiTree
- * Description:wiki Tree Po类
+ * Title:TBobofaceAdsTree
+ * Description:service Tree Po类
  * @author    zwb
- * @date      2016年7月25日 下午12:05:27
+ * @date      2016年8月16日 上午10:32:42
  *
  */
-public class TBobofaceWikiTree {
+public class TBobofaceServiceTree {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private Integer parentid;
+    private Integer sort;
+    private Byte ismountads;
     private Byte allowadd;
     private Byte allowdelete;
     private Byte allowedit;
@@ -58,7 +60,24 @@ public class TBobofaceWikiTree {
     public void setParentid(Integer parentid) {
         this.parentid = parentid;
     }
-    public Byte getAllowadd() {
+    
+    public Integer getSort() {
+		return sort;
+	}
+    
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
+	public Byte getIsmountads() {
+		return ismountads;
+	}
+	
+	public void setIsmountads(Byte ismountads) {
+		this.ismountads = ismountads;
+	}
+	
+	public Byte getAllowadd() {
         return allowadd;
     }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapperCustom" >
+  <resultMap id="BaseResultMap" type="com.boboface.serviceTree.model.po.TBobofaceServiceTree" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentid" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="isMountAds" property="ismountads" jdbcType="TINYINT" />
+    <result column="allowAdd" property="allowadd" jdbcType="TINYINT" />
+    <result column="allowDelete" property="allowdelete" jdbcType="TINYINT" />
+    <result column="allowEdit" property="allowedit" jdbcType="TINYINT" />
+    <result column="addTime" property="addtime" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 用户权限resultMap -->
+	<resultMap type="com.boboface.serviceTree.model.po.TBobofaceServiceTreeCustom" id="childServiceTreeResultMap" extends="BaseResultMap">
+		<collection property="childServiceTree"
+			ofType="com.boboface.serviceTree.model.po.TBobofaceServiceTree"
+			select="com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapperCustom.findSerivceTreeByParentId"
+			column="id" 
+			fetchType="eager"></collection>
+	</resultMap>
+	
+	<!-- 查询根节点 -->
+	<select id="findRootServiceTree" resultMap="childServiceTreeResultMap">
+		SELECT * FROM t_boboface_service_tree WHERE parentId IS NULL
+	</select>
+	
+	<!-- 查询子业务树 -->
+	<select id="findSerivceTreeByParentId" parameterType="java.lang.Integer" resultMap="childServiceTreeResultMap">
+		SELECT * FROM t_boboface_service_tree tbst
+		<where>
+			<if test="value!=null and value!=''">
+				AND tbst.parentId=#{value}
+			</if>
+		</where>
+	</select>
+</mapper>

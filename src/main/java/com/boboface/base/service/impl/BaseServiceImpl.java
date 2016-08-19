@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
 
+import com.boboface.ads.mapper.TBobofaceAdsContentMapper;
+import com.boboface.ads.mapper.TBobofaceAdsProjectMapper;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
+import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapper;
+import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapperCustom;
 import com.boboface.wiki.mapper.TBobofaceWikiContentMapper;
 import com.github.pagehelper.PageHelper;
 
@@ -49,6 +53,30 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Autowired
 	protected TBobofaceWikiContentMapper tBobofaceWikiContentMapper;
+	
+	/**
+	 * service tree mapper接口
+	 */
+	@Autowired
+	protected TBobofaceServiceTreeMapper tBobofaceServiceTreeMapper;
+	
+	/**
+	 * ads content mapper接口
+	 */
+	@Autowired
+	protected TBobofaceAdsContentMapper tBobofaceAdsContentMapper;
+	
+	/**
+	 * service tree custom mapper接口
+	 */
+	@Autowired
+	protected TBobofaceServiceTreeMapperCustom tBobofaceServiceTreeMapperCustom;
+	
+	/**
+	 * ads project mapper接口
+	 */
+	@Autowired
+	protected TBobofaceAdsProjectMapper tBobofaceAdsProjectMapper;
 	
 	public void save(T entity) {
 		mapper.insert(entity);

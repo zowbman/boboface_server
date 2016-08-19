@@ -57,4 +57,19 @@ public class BaseUtil {
 		T[] arrsResult = list.toArray(arrs);
 		return Arrays.copyOf(arrsResult, arrsResult.length - 1);
 	}
+	
+	/**
+	 * 判断一个字符串数组中是否包含指定字符串
+	 * @param s 字符串
+	 * @param strs 字符串数组
+	 * @return
+	 */
+	public static boolean isHave(String s, String... strs){
+		for (int i = 0; i < strs.length; i++) {
+			if(strs[i].indexOf(s)!=-1){
+				return true;
+			}
+		}
+		return false;
+	}
 }

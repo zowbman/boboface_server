@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.boboface.ads.mapper.TBobofaceAdsProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.boboface.ads.model.po.TBobofaceAdsProject" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="appName" property="appname" jdbcType="VARCHAR" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="storagePath" property="storagepath" jdbcType="VARCHAR" />
+    <result column="serviceTreeId" property="servicetreeid" jdbcType="INTEGER" />
+    <result column="addTime" property="addtime" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

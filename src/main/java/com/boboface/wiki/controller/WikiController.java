@@ -10,11 +10,13 @@ import net.zowbman.base.helper.CodeHelper.CODE;
 import net.zowbman.base.helper.PageHelper;
 import net.zowbman.base.model.vo.OrderStyleEnum;
 import net.zowbman.base.model.vo.PageBean;
+import net.zowbman.base.model.vo.PageInfoCustom;
 import net.zowbman.base.model.vo.PubRetrunMsg;
 import net.zowbman.base.util.BaseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -213,12 +215,19 @@ public class WikiController extends BaseController {
 		PageBean pageBean = new PageBean(pageNum, pageSize, "id", OrderStyleEnum.DESC);
 		List<TBobofaceWikiTree> tBobofaceWikiTrees = iWikiTreeService.findAllByPageBean(pageBean);
 		PageInfo<TBobofaceWikiTree> pageInfo = new PageInfo<TBobofaceWikiTree>(tBobofaceWikiTrees);
+		PageInfoCustom pageInfoCustom = new PageInfoCustom();
+		BeanUtils.copyProperties(pageInfo, pageInfoCustom);
 		data.put("list", tBobofaceWikiTrees);
-		data.put("pageInfo", pageInfo);
+		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
 		return new PubRetrunMsg(CODE._100000, data);
 	}
 	
+	/**
+	 * wiki content 保存
+	 * @param tBobofaceWikiContentVo
+	 * @return
+	 */
 	@RequestMapping(value = "/json/v1/wiki/content/save", method=RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg wikiContentSaveV1(TBobofaceWikiContentVo tBobofaceWikiContentVo){
 		Map<String, Object> data = new HashMap<String, Object>();

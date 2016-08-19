@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.boboface.ads.service.IAdsContentService;
+import com.boboface.ads.service.IAdsProjectService;
+import com.boboface.serviceTree.service.IServiceTreeService;
 import com.boboface.wiki.service.IWikiContentService;
 import com.boboface.wiki.service.IWikiTreeService;
 
@@ -32,4 +35,22 @@ public class BaseController {
 	 */
 	@Autowired
 	protected IWikiContentService iWikiContentService;
+	
+	/**
+	 * service tree service接口
+	 */
+	@Autowired
+	protected IServiceTreeService iServiceTreeService;
+	
+	/**
+	 * ads content service接口
+	 */
+	@Autowired
+	protected IAdsContentService iAdsContentService;
+	
+	/**
+	 * ads project service接口
+	 */
+	@Autowired
+	protected IAdsProjectService iAdsProjectService;
 }

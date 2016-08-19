@@ -46,12 +46,12 @@
 		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml"></property>
 	</bean>
 	
-	<!-- mapper扫描器
+	<!-- mapper扫描器-->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		扫描的包路径，如果需要扫描多个包，中间使用半角逗号隔开 
-		<property name="basePackage" value="com.sing.**.mapper"></property>
+		<!-- 扫描的包路径，如果需要扫描多个包，中间使用半角逗号隔开 --> 
+		<property name="basePackage" value="com.**.mapper"></property>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
-	</bean> -->
+	</bean>
 	<!-- 通用mapper -->
 	<bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
 	    <property name="basePackage" value="com.**.mapper"/>

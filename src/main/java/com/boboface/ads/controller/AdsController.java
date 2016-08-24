@@ -210,7 +210,14 @@ public class AdsController extends BaseController {
 		}
 		//项目部署
 		ProjectBuild projectBuild = new OrdinaryProject();
-		projectBuild.prepareProjectBuildTemplage(new ProjectBuildVo(adsProject.getAppname(), "git@github.com:zowbman/boboface_server.git1"));
-		return new PubRetrunMsg(CODE._100000, null);
+		//如果tag为空，则发布branch
+		String targetCode = tBobofaceAdsProjectBuildVo.getBranchTag() != null ? tBobofaceAdsProjectBuildVo.getBranchTag() : tBobofaceAdsProjectBuildVo.getAppBranch();
+		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
+				adsProject.getAppname(),
+				"git@github.com:zowbman/boboface_server.git", targetCode, adsProject.getStoragepath());
+		
+		String buildResult = projectBuild.prepareProjectBuildTemplage(projectBuildVo);
+		data.put("buildResult", buildResult);
+		return new PubRetrunMsg(CODE._100000, data);
 	}
 }

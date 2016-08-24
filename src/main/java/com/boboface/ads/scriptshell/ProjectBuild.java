@@ -37,18 +37,10 @@ public abstract class ProjectBuild {
 	 */
 	IStringDataTypeConversion iStringDataTypeConversion = new StringDataTypeConversionImpl();
 	
-	public final void prepareProjectBuildTemplage(ProjectBuildVo projectBuildVo){
+	public final String prepareProjectBuildTemplage(ProjectBuildVo projectBuildVo){
 		ready();
-		//1、进入编译位置
-		compileRoot(projectBuildVo.getAppName());
-		//2、拉去代码
-		cloneCode(projectBuildVo.getGitPath(), projectBuildVo.getBranch(), projectBuildVo.getTag());
-		//3、变更程序代码脚本编码类型
-		//4、执行make.sh
-		//5、clone到存储位置
-		//6、执行run.sh
-		//7、执行shell命令
-		runShell();
+		compile(projectBuildVo);//编译
+		return runShell();
 	}
 	
 	private void ready(){
@@ -57,27 +49,29 @@ public abstract class ProjectBuild {
 	}
 	
 	/**
-	 * 1、进入编译位置
-	 * @param appName 项目名
+	 * 编译部署
+	 * @param projectBuildVo 包装类
 	 */
-	private void compileRoot(String appName) {
-		//tempStrings.add("cd /compile/" + appName);
+	private void compile(ProjectBuildVo projectBuildVo) {
+		String path = getClass().getResource("/").getPath();
+		path += "shell/ads.build1.0.sh ";
+		tempStrings.add("dos2unix " + path);
+		//# $1 appName
+		//# $2 gitPath
+		//# $3 targetCode
+		//# $4 appFolder
+		tempStrings.add("sh " + path + 
+		projectBuildVo.getAppName() + " " +
+		projectBuildVo.getGitPath() + " " +
+		projectBuildVo.getTargetCode() + " " +
+		projectBuildVo.getAppFolder());
 	}
 	
-	/**
-	 * 2、拉取代码
-	 * @param gitPath git地址
-	 * @param branch 分支
-	 * @param Tag 标签
-	 */
-	private void cloneCode(String gitPath, String branch, String Tag){
-		tempStrings.add("git clone " + gitPath);
-	}
 	
 	/**
 	 * 2、执行shell命令
 	 */
-	private void runShell(){
+	private String runShell(){
 		
 		shellScripts.add(iStringDataTypeConversion.listStrToString(tempStrings, " && "));
 		
@@ -85,7 +79,8 @@ public abstract class ProjectBuild {
 		for(int i = 0;i < shellScripts.size(); i++){
 			strings[i] = shellScripts.get(i);
 		}
-		String lineResult = ShellHandler.process(strings);
-		logger.info(lineResult);
+		String lineResult = "";
+		lineResult += ShellHandler.process(strings);
+		return lineResult;
 	}
 }

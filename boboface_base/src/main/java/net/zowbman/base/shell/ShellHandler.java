@@ -23,21 +23,23 @@ public class ShellHandler {
 	 * @return
 	 */
 	public static String process(String[] shellScript){
+		String runResult = "";
 		try {
 			Process process = Runtime.getRuntime().exec(shellScript);
 			InputStreamReader ir = new InputStreamReader(process.getInputStream());
 	        LineNumberReader input = new LineNumberReader(ir);
 	        String line;
-	        logger.info("读取的信息：");
+	        //logger.info("读取的信息：");
 	        while((line = input.readLine()) != null){
-	            logger.info(line);
+	        	//logger.info(line);
+	        	runResult += (line + "\n");
 	        }
 	        input.close();
 	        ir.close();
-	        return line;
+	        return runResult;
 		} catch (Exception e) {
 			logger.error("Exception catch:" , e);
 		}
-		return "0";
+		return "";
 	}
 }

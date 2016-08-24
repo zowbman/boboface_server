@@ -3,19 +3,21 @@ package com.boboface.ads.scriptshell;
 public class ProjectBuildVo {
 	private String appName;//项目名称
 	private String gitPath;//git地址
-	private String branch;//分支
-	private String tag;//tag
+	private String targetCode;//分支|tag
+	private String appFolder;//项目目录地址
 	
-	public ProjectBuildVo(String appName, String gitPath){
+	/**
+	 * 
+	 * @param appName 项目名称
+	 * @param gitPath git地址
+	 * @param targetCode 分支|tag
+	 * @param appFolder 项目目录地址
+	 */
+	public ProjectBuildVo(String appName, String gitPath, String targetCode, String appFolder){
 		this.appName = appName;
 		this.gitPath = gitPath;
-	}
-	
-	public ProjectBuildVo(String appName, String gitPath, String branch, String tag){
-		this.appName = appName;
-		this.gitPath = gitPath;
-		this.branch = branch;
-		this.tag = tag;
+		this.targetCode = targetCode;
+		this.appFolder = appFolder;
 	}
 	
 	public String getAppName() {
@@ -30,17 +32,16 @@ public class ProjectBuildVo {
 	public void setGitPath(String gitPath) {
 		this.gitPath = gitPath;
 	}
-	public String getBranch() {
-		return branch;
+	public String getTargetCode() {
+		return targetCode;
 	}
-	public void setBranch(String branch) {
-		this.branch = branch;
+	public void setTargetCode(String targetCode) {
+		this.targetCode = targetCode;
 	}
-	public String getTag() {
-		return tag;
+	public String getAppFolder() {
+		return appFolder;
 	}
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setAppFolder(String appFolder) {
+		this.appFolder = appFolder;
 	}
-	
 }

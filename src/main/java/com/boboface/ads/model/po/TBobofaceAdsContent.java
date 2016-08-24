@@ -13,8 +13,9 @@ import javax.persistence.Id;
 public class TBobofaceAdsContent {
 	@Id
     private Integer id;
-    private Integer adstreeid;
+    private Integer appid;
     private Integer addtime;
+    private String title;
     private String content;
 
     public Integer getId() {
@@ -25,12 +26,12 @@ public class TBobofaceAdsContent {
         this.id = id;
     }
 
-    public Integer getAdstreeid() {
-		return adstreeid;
+	public Integer getAppid() {
+		return appid;
 	}
 
-	public void setAdstreeid(Integer adstreeid) {
-		this.adstreeid = adstreeid;
+	public void setAppid(Integer appid) {
+		this.appid = appid;
 	}
 
 	public Integer getAddtime() {
@@ -48,4 +49,12 @@ public class TBobofaceAdsContent {
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }

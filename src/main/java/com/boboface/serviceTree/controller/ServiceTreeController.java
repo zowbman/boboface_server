@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boboface.ads.controller.AdsController;
+import com.boboface.ads.model.po.AdsTemplate;
+import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
 import com.boboface.ads.model.vo.TBobofaceAdsProjectVo;
 import com.boboface.base.controller.BaseController;
@@ -50,6 +52,21 @@ public class ServiceTreeController extends BaseController {
 	public @ResponseBody PubRetrunMsg serviceTreeListV1() throws CustomException{
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<TBobofaceServiceTree> tBobofaceServiceTrees = iServiceTreeService.findAllBySort(OrderStyleEnum.ACS);
+		//根节点
+		List<TBobofaceServiceTree> newServiceTrees = new ArrayList<TBobofaceServiceTree>();
+		TBobofaceServiceTree newServiceTree = new TBobofaceServiceTree();
+		newServiceTree.setId(0);
+		newServiceTree.setTitle("boboface");
+		newServiceTree.setAllowadd((byte)0);
+		newServiceTree.setAllowedit((byte)0);
+		newServiceTree.setAllowdelete((byte)0);
+		tBobofaceServiceTrees.add(newServiceTree);
+		for (TBobofaceServiceTree serviceTree : tBobofaceServiceTrees) {
+			if(serviceTree.getParentid() == null){
+				serviceTree.setParentid(0);
+			}
+			newServiceTrees.add(serviceTree);
+		}
 		data.put("list", tBobofaceServiceTrees);
 		return new PubRetrunMsg(CODE._100000, data);
 	}
@@ -249,6 +266,11 @@ public class ServiceTreeController extends BaseController {
 			iAdsProjectService.saveSeletive(adsProject);
 			serviceTree.setIsmountads((byte)1);
 			iServiceTreeService.updateSeletive(serviceTree);
+			//新建模板
+			List<TBobofaceAdsContent> tBobofaceAdsContents = AdsTemplate.getAdsTemplate(adsProject.getId());
+			for (TBobofaceAdsContent tBobofaceAdsContent : tBobofaceAdsContents) {
+				iAdsContentService.saveSeletive(tBobofaceAdsContent);
+			}
 			data.put("msg", adsProject.getAppname() + "项目挂载成功");
 		}
 		return new PubRetrunMsg(CODE._100000, data);

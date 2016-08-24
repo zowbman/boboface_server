@@ -15,9 +15,9 @@ import com.boboface.base.service.IBaseService;
  */
 public interface IAdsContentService extends IBaseService<TBobofaceAdsContent> {
 	/**
-	 * 根据adsTreeId获取模板内容
-	 * @param adsTreeId
+	 * 根据appId获取模板内容
+	 * @param appId
 	 * @return List<TBobofaceAdsContent>
 	 */
-	List<TBobofaceAdsContent> getByAdsTreeId(Integer adsTreeId);
+	List<TBobofaceAdsContent> getByAppId(Integer appId);
 }

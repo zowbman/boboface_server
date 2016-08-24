@@ -1,5 +1,7 @@
 package com.boboface.ads.model.po;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -12,6 +14,7 @@ import javax.persistence.Id;
  */
 public class TBobofaceAdsProject {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String appname;
     private String introduction;

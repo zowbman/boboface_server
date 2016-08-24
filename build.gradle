@@ -39,6 +39,7 @@ tasks.withType(JavaCompile) {
 }
 
 task copyLib1(type: Sync, dependsOn: jar) {
+	dependsOn 'copyXml'
     from configurations.compile
     from jar.archivePath
     into 'build/deploy'
@@ -51,6 +52,12 @@ task copyLib2(type: Sync, dependsOn: copyLib1) {
 
 task deploy{
 	dependsOn  'copyLib2'
+}
+
+task copyXml(type: Copy){
+	from 'src/main/java/com/boboface/serviceTree/mapper'
+	into 'build/classes/main/com/boboface/serviceTree/mapper'
+	exclude '**/*.java'
 }
 
 jar.exclude 'logback-test.xml'

@@ -26,13 +26,13 @@ public class AdsContentServiceImpl extends BaseServiceImpl<TBobofaceAdsContent> 
 	private static Logger logger = LoggerFactory.getLogger(AdsContentServiceImpl.class);
 
 	@Override
-	public List<TBobofaceAdsContent> getByAdsTreeId(Integer adsTreeId) {
-		if(adsTreeId == null){
-			logger.error("adsTreeId 不允许为null");
+	public List<TBobofaceAdsContent> getByAppId(Integer appId) {
+		if(appId == null){
+			logger.error("appId 不允许为null");
 			return null;
 		}
 		Example example = new Example(TBobofaceAdsContent.class);
-		example.createCriteria().andEqualTo("adstreeid", adsTreeId);
+		example.createCriteria().andEqualTo("appid", appId);
 		return tBobofaceAdsContentMapper.selectByExample(example);
 	}
 }

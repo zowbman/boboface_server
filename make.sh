@@ -11,7 +11,7 @@ rsync -aq --delete build/deploy/webapp outer/lib/webapp/
 
 #将配置文件同步到outer/etc目录
 mkdir -p outer/etc
-rsync -aq --delete src/main/resouces/ outer/etc --exclude-from=exclude.list
+rsync -aq --delete build/resources/main/ outer/etc --exclude-from=exclude.list
 
 #将启动脚本同步到outer目录
 install -v -c -m 755 run.sh outer/

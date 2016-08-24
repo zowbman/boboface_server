@@ -1,0 +1,8 @@
+freemarker
+jdbc
+mybatis
+spring
+validation
+global.properties
+logback-test.xml
+logback.xml

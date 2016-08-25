@@ -6,6 +6,9 @@
     <result column="appName" property="appname" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
     <result column="storagePath" property="storagepath" jdbcType="VARCHAR" />
+    <result column="gitPath" property="gitpath" jdbcType="VARCHAR" />
+    <result column="runUser" property="runuser" jdbcType="VARCHAR" />
+    <result column="runGroup" property="rungroup" jdbcType="VARCHAR" />
     <result column="serviceTreeId" property="servicetreeid" jdbcType="INTEGER" />
     <result column="addTime" property="addtime" jdbcType="INTEGER" />
   </resultMap>

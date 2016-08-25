@@ -19,6 +19,9 @@ public class TBobofaceAdsProject {
     private String appname;
     private String introduction;
     private String storagepath;
+    private String gitpath;
+    private String runuser;
+    private String rungroup;
     private Integer servicetreeid;
     private Integer addtime;
 
@@ -54,7 +57,31 @@ public class TBobofaceAdsProject {
         this.storagepath = storagepath == null ? null : storagepath.trim();
     }
 
-    public Integer getServicetreeid() {
+    public String getGitpath() {
+		return gitpath;
+	}
+
+	public void setGitpath(String gitpath) {
+		this.gitpath = gitpath == null ? null : gitpath.trim();
+	}
+
+	public String getRunuser() {
+		return runuser;
+	}
+
+	public void setRunuser(String runuser) {
+		this.runuser = runuser == null ? null : runuser.trim();
+	}
+
+	public String getRungroup() {
+		return rungroup;
+	}
+
+	public void setRungroup(String rungroup) {
+		this.rungroup = rungroup == null ? null : rungroup.trim();
+	}
+
+	public Integer getServicetreeid() {
         return servicetreeid;
     }
 

@@ -14,6 +14,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import com.boboface.ads.mapper.TBobofaceAdsContentMapper;
 import com.boboface.ads.mapper.TBobofaceAdsProjectMapper;
+import com.boboface.ads.mapper.TBobofaceAdsUntilscriptMapper;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
 import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapper;
@@ -77,6 +78,12 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Autowired
 	protected TBobofaceAdsProjectMapper tBobofaceAdsProjectMapper;
+	
+	/**
+	 * ads untilScript mapper接口
+	 */
+	@Autowired
+	protected TBobofaceAdsUntilscriptMapper tBobofaceAdsUntilscriptMapper;
 	
 	public void save(T entity) {
 		mapper.insert(entity);

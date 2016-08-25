@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.boboface.ads.service.IAdsContentService;
 import com.boboface.ads.service.IAdsProjectService;
+import com.boboface.ads.service.IAdsUnitlScriptService;
 import com.boboface.serviceTree.service.IServiceTreeService;
 import com.boboface.wiki.service.IWikiContentService;
 import com.boboface.wiki.service.IWikiTreeService;
@@ -53,4 +54,10 @@ public class BaseController {
 	 */
 	@Autowired
 	protected IAdsProjectService iAdsProjectService;
+	
+	/**
+	 * ads unitlScript service接口
+	 */
+	@Autowired
+	protected IAdsUnitlScriptService iAdsUnitlScriptService;
 }

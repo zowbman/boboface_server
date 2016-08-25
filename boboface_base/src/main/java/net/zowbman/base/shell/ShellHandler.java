@@ -32,7 +32,7 @@ public class ShellHandler {
 	        //logger.info("读取的信息：");
 	        while((line = input.readLine()) != null){
 	        	//logger.info(line);
-	        	runResult += (line + "\n");
+	        	runResult += (line + "<br>");
 	        }
 	        input.close();
 	        ir.close();

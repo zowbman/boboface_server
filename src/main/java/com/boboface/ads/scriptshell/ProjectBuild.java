@@ -38,8 +38,17 @@ public abstract class ProjectBuild {
 	IStringDataTypeConversion iStringDataTypeConversion = new StringDataTypeConversionImpl();
 	
 	public final String prepareProjectBuildTemplage(ProjectBuildVo projectBuildVo){
+		//1、准备执行
 		ready();
-		compile(projectBuildVo);//编译
+		//2、编译
+		compile(projectBuildVo);
+		//3、在目标机器创建临时目录
+		//4、下载相关配置文件以及脚本
+		//5、运行前置脚本
+		//6、开始实例化配置文件
+		//7、检查运行账号
+		//8、重临时目录同步到工作目录
+		//9、运行后置脚本
 		return runShell();
 	}
 	

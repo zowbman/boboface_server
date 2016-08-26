@@ -26,9 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boboface.ads.controller.AdsController;
-import com.boboface.ads.model.po.AdsTemplate;
+import com.boboface.ads.model.po.AdsUnitl;
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
+import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
 import com.boboface.ads.model.vo.TBobofaceAdsProjectVo;
 import com.boboface.base.controller.BaseController;
 import com.boboface.exception.CustomException;
@@ -258,18 +259,26 @@ public class ServiceTreeController extends BaseController {
 			throw new CustomException("不存在被挂载业务树，刷新重试");
 		}else{
 			TBobofaceAdsProject adsProject = new TBobofaceAdsProject();
-			adsProject.setServicetreeid(serviceTree.getId());
-			adsProject.setAppname(tBobofaceAdsProjectVo.getAdsProject().getAppname());
-			adsProject.setIntroduction(tBobofaceAdsProjectVo.getAdsProject().getIntroduction());
-			adsProject.setStoragepath(tBobofaceAdsProjectVo.getAdsProject().getStoragepath());
+			adsProject.setServicetreeid(serviceTree.getId());//业务树id
+			adsProject.setAppname(tBobofaceAdsProjectVo.getAdsProject().getAppname());//项目名称
+			adsProject.setIntroduction(tBobofaceAdsProjectVo.getAdsProject().getIntroduction());//简介
+			adsProject.setStoragepath(tBobofaceAdsProjectVo.getAdsProject().getStoragepath());//存储路径
+			adsProject.setGitpath(tBobofaceAdsProjectVo.getAdsProject().getGitpath());//git地址
+			adsProject.setRunuser(tBobofaceAdsProjectVo.getAdsProject().getRunuser());//运行账号
+			adsProject.setRungroup(tBobofaceAdsProjectVo.getAdsProject().getRungroup());//账号属组
 			adsProject.setAddtime((int)BaseUtil.currentTimeMillis());
 			iAdsProjectService.saveSeletive(adsProject);
 			serviceTree.setIsmountads((byte)1);
 			iServiceTreeService.updateSeletive(serviceTree);
 			//新建模板
-			List<TBobofaceAdsContent> tBobofaceAdsContents = AdsTemplate.getAdsTemplate(adsProject.getId());
+			List<TBobofaceAdsContent> tBobofaceAdsContents = AdsUnitl.getAdsTemplate(adsProject.getId());
 			for (TBobofaceAdsContent tBobofaceAdsContent : tBobofaceAdsContents) {
 				iAdsContentService.saveSeletive(tBobofaceAdsContent);
+			}
+			//新建脚本工具
+			List<TBobofaceAdsUntilscript> tBobofaceAdsUntilscripts = AdsUnitl.getAdsUnitlScript(adsProject.getId(), getClass().getResource("/").getPath() + "shell/");
+			for (TBobofaceAdsUntilscript tBobofaceAdsUntilscript : tBobofaceAdsUntilscripts) {
+				iAdsUnitlScriptService.saveSeletive(tBobofaceAdsUntilscript);
 			}
 			data.put("msg", adsProject.getAppname() + "项目挂载成功");
 		}

@@ -16,7 +16,7 @@ appFolder=$4
 
 # 1. check compile app folder
 
-if [[ ! -d "/compile/$appName" ]];
+if [[ ! -d "/__bobofaceAdsCompile__/$appName" ]];
 	then
 	echo "no such file or directory"
 	exit 1
@@ -24,7 +24,7 @@ fi
 
 # 2. clone git repertory
 
-cd /compile/$appName
+cd /__bobofaceAdsCompile__/$appName
 
 rm -rf *
 

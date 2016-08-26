@@ -13,6 +13,7 @@ import net.zowbman.base.model.vo.OrderStyleEnum;
 import net.zowbman.base.model.vo.PageBean;
 import net.zowbman.base.model.vo.PageInfoCustom;
 import net.zowbman.base.model.vo.PubRetrunMsg;
+import net.zowbman.base.util.BaseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
+import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
 import com.boboface.ads.model.vo.TBobofaceAdsContentVo;
 import com.boboface.ads.model.vo.TBobofaceAdsProjectBuildVo;
 import com.boboface.ads.scriptshell.OrdinaryProject;
@@ -55,8 +57,13 @@ public class AdsController extends BaseController {
 	 * @return PubRetrunMsg
 	 * @throws CustomException 
 	 */
-	@RequestMapping("/json/v1/ads/treeList")
-	public @ResponseBody PubRetrunMsg adsTreeListV1() throws CustomException{
+	@RequestMapping("/json/v1/ads/treeList/{type}")
+	public @ResponseBody PubRetrunMsg adsTreeListV1(@PathVariable("type") String type) throws CustomException{
+		if(!BaseUtil.isHave(type, "template","unitlScript")){
+			logger.error("参数错误，参数：" + type + "，非template或unitlScript");
+			return new PubRetrunMsg(CODE._200001, null);
+		}
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		//List<TBobofaceServiceTree> tBobofaceServiceTrees = iServiceTreeService.findAllBySortAndIsMountAds(OrderStyleEnum.ACS, (byte)1);
 		List<TBobofaceServiceTree> serviceTrees = iServiceTreeService.findAll();
@@ -92,14 +99,24 @@ public class AdsController extends BaseController {
 							map.put("parentid", serviceTree.getId());
 							//map.put("allowadd", 1);
 							listMap.add(map);
-							//获取模板文件
-							List<TBobofaceAdsContent> adsTemplates = iAdsContentService.getByAppId(adsProject.getId());
-							for (TBobofaceAdsContent adsTemplate : adsTemplates) {
-								map = new HashMap<String, Object>();
-								map.put("id", adsTemplate.getId());
-								map.put("title", adsTemplate.getTitle());
-								map.put("parentid", adsProject.getId());
-								listMap.add(map);
+							if("template".equals(type)){//获取模板文件
+								List<TBobofaceAdsContent> adsTemplates = iAdsContentService.getByAppId(adsProject.getId());
+								for (TBobofaceAdsContent adsTemplate : adsTemplates) {
+									map = new HashMap<String, Object>();
+									map.put("id", adsTemplate.getId());
+									map.put("title", adsTemplate.getTitle());
+									map.put("parentid", adsProject.getId());
+									listMap.add(map);
+								}
+							}else if("unitlScript".equals(type)){//工具脚本
+								List<TBobofaceAdsUntilscript> adsUnitlScripts = iAdsUnitlScriptService.getByAppId(adsProject.getId());
+								for (TBobofaceAdsUntilscript adsUnitlScript : adsUnitlScripts) {
+									map = new HashMap<String, Object>();
+									map.put("id", adsUnitlScript.getId());
+									map.put("title", adsUnitlScript.getTitle());
+									map.put("parentid", adsProject.getId());
+									listMap.add(map);
+								}
 							}
 						}
 					}
@@ -115,11 +132,20 @@ public class AdsController extends BaseController {
 	 * @param appId
 	 * @return PubRetrunMsg
 	 */
-	@RequestMapping("/json/v1/ads/content/{id}")
-	public @ResponseBody PubRetrunMsg adsContentV1(@PathVariable("id") Integer appId){
+	@RequestMapping("/json/v1/ads/content/{id}/{type}")
+	public @ResponseBody PubRetrunMsg adsContentV1(@PathVariable("id") Integer appId, @PathVariable("type") String type){
+		if(!BaseUtil.isHave(type, "template","unitlScript")){
+			logger.error("参数错误，参数：" + type + "，非template或unitlScript");
+			return new PubRetrunMsg(CODE._200001, null);
+		}
 		Map<String, Object> data = new HashMap<String, Object>();
-		TBobofaceAdsContent tBobofaceAdsContent = iAdsContentService.getById(appId);
-		data.put("adsContent", tBobofaceAdsContent);
+		if("template".equals(type)){//获取模板文件
+			TBobofaceAdsContent tBobofaceAdsContent = iAdsContentService.getById(appId);
+			data.put("content", tBobofaceAdsContent);
+		}else if("unitlScript".equals(type)){//工具脚本
+			TBobofaceAdsUntilscript tBobofaceAdsUntilscript = iAdsUnitlScriptService.getById(appId);
+			data.put("content", tBobofaceAdsUntilscript);
+		}
 		return new PubRetrunMsg(CODE._100000, data);
 	}
 	
@@ -214,7 +240,9 @@ public class AdsController extends BaseController {
 		String targetCode = tBobofaceAdsProjectBuildVo.getBranchTag() != null ? tBobofaceAdsProjectBuildVo.getBranchTag() : tBobofaceAdsProjectBuildVo.getAppBranch();
 		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
 				adsProject.getAppname(),
-				"git@github.com:zowbman/boboface_server.git", targetCode, adsProject.getStoragepath());
+				adsProject.getGitpath(),
+				targetCode,
+				adsProject.getStoragepath());
 		
 		String buildResult = projectBuild.prepareProjectBuildTemplage(projectBuildVo);
 		data.put("buildResult", buildResult);

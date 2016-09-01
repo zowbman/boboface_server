@@ -5,6 +5,7 @@ apply plugin: 'eclipse'
 repositories {
     mavenCentral()
     //maven {url "http://172.17.14.76:8091/nexus/content/repositories/central/"}
+    maven {url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"}
 }
 
 dependencies {
@@ -32,6 +33,10 @@ dependencies {
  	compile 'org.mybatis:mybatis-spring:1.2.4'
  	compile 'mysql:mysql-connector-java:5.1.6'
  	compile 'c3p0:c3p0:0.9.1.2'
+ 	
+ 	//aliyun
+ 	compile 'com.aliyun:aliyun-java-sdk-core:3.0.7'
+ 	compile 'com.aliyun:aliyun-java-sdk-ecs:2.2.3'
 }
 
 tasks.withType(JavaCompile) {  

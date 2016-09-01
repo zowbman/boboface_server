@@ -238,12 +238,19 @@ public class AdsController extends BaseController {
 		ProjectBuild projectBuild = new OrdinaryProject();
 		//如果tag为空，则发布branch
 		String targetCode = tBobofaceAdsProjectBuildVo.getBranchTag() != null ? tBobofaceAdsProjectBuildVo.getBranchTag() : tBobofaceAdsProjectBuildVo.getAppBranch();
-		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
-				adsProject.getAppname(),
-				adsProject.getGitpath(),
-				targetCode,
-				adsProject.getStoragepath());
+		List<TBobofaceAdsUntilscript> adsUnitlScripts = iAdsUnitlScriptService.getByAppId(adsProject.getId());
 		
+		//准备发布参数
+		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
+				adsProject.getId(),//appId
+				adsProject.getAppname(),//appName
+				adsProject.getGitpath(),//gitPath
+				targetCode,//code
+				adsProject.getStoragepath(),//storagepath
+				adsProject.getRunuser(),//owner
+				adsProject.getRungroup(),//ownerGroup
+				null, 
+				adsUnitlScripts);
 		String buildResult = projectBuild.prepareProjectBuildTemplage(projectBuildVo);
 		data.put("buildResult", buildResult);
 		return new PubRetrunMsg(CODE._100000, data);

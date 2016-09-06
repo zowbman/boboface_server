@@ -15,7 +15,7 @@
   <!-- 用户权限resultMap -->
 	<resultMap type="com.boboface.serviceTree.model.po.TBobofaceServiceTreeCustom" id="childServiceTreeResultMap" extends="BaseResultMap">
 		<collection property="childServiceTree"
-			ofType="com.boboface.serviceTree.model.po.TBobofaceServiceTree"
+			ofType="com.boboface.serviceTree.model.po.TBobofaceServiceTreeCustom"
 			select="com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapperCustom.findSerivceTreeByParentId"
 			column="id" 
 			fetchType="eager"></collection>

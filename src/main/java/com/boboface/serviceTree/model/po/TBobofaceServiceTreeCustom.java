@@ -1,6 +1,6 @@
 package com.boboface.serviceTree.model.po;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * 
@@ -12,13 +12,13 @@ import java.util.Set;
  */
 public class TBobofaceServiceTreeCustom extends TBobofaceServiceTree {
 	
-	private Set<TBobofaceServiceTree> childServiceTree;//子树
+	private List<TBobofaceServiceTreeCustom> childServiceTree;//子树
 
-	public Set<TBobofaceServiceTree> getChildServiceTree() {
+	public List<TBobofaceServiceTreeCustom> getChildServiceTree() {
 		return childServiceTree;
 	}
 
-	public void setChildServiceTree(Set<TBobofaceServiceTree> childServiceTree) {
+	public void setChildServiceTree(List<TBobofaceServiceTreeCustom> childServiceTree) {
 		this.childServiceTree = childServiceTree;
 	}
 }

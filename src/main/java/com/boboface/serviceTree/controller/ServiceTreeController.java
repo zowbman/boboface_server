@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -241,8 +242,27 @@ public class ServiceTreeController extends BaseController {
 		List<TBobofaceServiceTreeCustom> rootServiceTree = iServiceTreeService.findRootServiceTreeCustom();
 		if(rootServiceTree == null)
 			throw new CustomException("业务树无根节点，请联系研发人员");
+		int maxDepth = getMaxDepth(rootServiceTree);
+		data.put("maxDepth", maxDepth);
 		data.put("rootServiceTree", rootServiceTree.iterator().next());
 		return new PubRetrunMsg(CODE._100000, data);
+	}
+	
+	/**
+	 * ads挂载项目的业务树深度
+	 * @param serviceTrees 业务树
+	 * @return int
+	 */
+	private static int getMaxDepth(List<TBobofaceServiceTreeCustom> serviceTrees){
+		if(serviceTrees == null || serviceTrees.size() == 0){
+			return 0;
+		}else{
+			int i = 0;
+			for (TBobofaceServiceTreeCustom serviceTree : serviceTrees) {
+				i = getMaxDepth(serviceTree.getChildServiceTree());
+			}
+			return 1 + i;
+		}
 	}
 	
 	/**

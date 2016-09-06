@@ -2,6 +2,12 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 
+jar{
+	from('src/main/java'){
+		include '**/mapper/*.xml'
+	}
+}
+
 repositories {
     mavenCentral()
     //maven {url "http://172.17.14.76:8091/nexus/content/repositories/central/"}
@@ -44,7 +50,7 @@ tasks.withType(JavaCompile) {
 }
 
 task copyLib1(type: Sync, dependsOn: jar) {
-	dependsOn 'copyXml'
+	//dependsOn 'copyXml'
     from configurations.compile
     from jar.archivePath
     into 'build/deploy'
@@ -59,10 +65,11 @@ task deploy{
 	dependsOn  'copyLib2'
 }
 
-task copyXml(type: Copy){
+task copyXml(type: Copy){//\u4e00\u4e2atask \u53ea\u80fd\u5355\u4e2afrom\u548cinto
 	from 'src/main/java/com/boboface/serviceTree/mapper'
 	into 'build/classes/main/com/boboface/serviceTree/mapper'
 	exclude '**/*.java'
 }
 
 jar.exclude 'logback-test.xml'
+jar.exclude 'jdbc'

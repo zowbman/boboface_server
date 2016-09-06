@@ -1,5 +1,8 @@
 package com.boboface.base.controller;
 
+import net.zowbman.base.data.type.conversion.string.IStringDataTypeConversion;
+import net.zowbman.base.data.type.conversion.string.impl.StringDataTypeConversionImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.boboface.ads.service.IAdsContentService;
 import com.boboface.ads.service.IAdsProjectService;
+import com.boboface.ads.service.IAdsServerService;
 import com.boboface.ads.service.IAdsUnitlScriptService;
 import com.boboface.serviceTree.service.IServiceTreeService;
 import com.boboface.wiki.service.IWikiContentService;
@@ -60,4 +64,10 @@ public class BaseController {
 	 */
 	@Autowired
 	protected IAdsUnitlScriptService iAdsUnitlScriptService;
+	
+	/**
+	 * ads server service接口
+	 */
+	@Autowired
+	protected IAdsServerService iAdsServerService;
 }

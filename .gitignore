@@ -4,6 +4,7 @@ bin
 build
 .classpath
 .tern-project
+.myeclipse
 work
 boboface_base/.gradle
 boboface_base/.settings

@@ -55,9 +55,9 @@ public class CustomExceptionResolver extends ExceptionHandlerExceptionResolver i
 			customException = (CustomException) ex;
 		}else{
 			customException = new CustomException("未知错误");
+			logger.error("全局异常处理捕获异常 catch:", ex);
 		}
 		String message = customException.getMessage();
-		logger.error("全局异常处理器捕获异常:" + message);
 		if(body == null){			
 			modelAndView.setViewName("jsps/error");//指向错误页面
 			modelAndView.addObject("msg", message);

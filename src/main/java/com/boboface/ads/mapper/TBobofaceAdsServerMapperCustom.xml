@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.boboface.ads.mapper.TBobofaceAdsServerMapperCustom" >
+  <resultMap id="BaseResultMap" type="com.boboface.ads.model.po.TBobofaceAdsServer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="serverIp" property="serverip" jdbcType="VARCHAR" />
+    <result column="addTime" property="addtime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap type="com.boboface.ads.model.po.TBobofaceAdsServerCustom" id="serviceTreeResultMap" extends="BaseResultMap">
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="serviceTreeId" property="serviceTreeId" jdbcType="INTEGER" />
+    <result column="serviceTreeParentId" property="serviceTreeParentId" jdbcType="INTEGER" />
+    <association property="parentServiceTree"
+			javaType="com.boboface.serviceTree.model.po.TBobofaceServiceTree"
+			select="com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapper.selectByPrimaryKey"
+			column="serviceTreeParentId"></association>
+  </resultMap>
+	<!-- 查询根节点 -->
+	<select id="findAllServer" resultMap="serviceTreeResultMap">
+		SELECT
+			tbas.id,
+			tbas.serverIp,
+			tbst.title,
+			tbst.id 'serviceTreeId',
+			tbst.parentId 'serviceTreeParentId'
+		FROM
+			t_boboface_ads_server tbas
+		LEFT JOIN t_boboface_ads_server_servicetree tbass ON tbas.id = tbass.serverId
+		LEFT JOIN t_boboface_service_tree tbst ON tbass.serviceTreeId = tbst.id
+	</select>
+	<!-- 挂载服务器 -->
+	<insert id="saveServerMount" parameterType="map">
+		INSERT INTO t_boboface_ads_server_servicetree (serverId, serviceTreeId)
+		VALUES
+			(#{serverId}, #{serviceTreeId})
+	</insert>
+	<!-- 取消挂载服务器 -->
+	<delete id="deleteServerMount" parameterType="map">
+		DELETE
+		FROM
+			t_boboface_ads_server_servicetree
+		<where>
+			<if test="ids != null and ids.size > 0">
+				<foreach collection="ids" open="AND serverId IN(" close=")" item="id" separator=",">
+					#{id}
+				</foreach>
+			</if>
+			<if test="serviceTreeId != null">
+				AND serviceTreeId = #{serviceTreeId}
+			</if>
+			<if test="ids == null or ids.size == 0 or serviceTreeId == null">
+				AND 1 = 0
+			</if>
+		</where>
+	</delete>
+	<!-- 根据ips和业务树id查询服务器列表 -->
+	<select id="findServerByIpsAndServiceTreeId" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+			tbas.*
+		FROM
+			t_boboface_ads_server tbas
+		INNER JOIN t_boboface_ads_server_servicetree tbass ON tbas.id = tbass.serverId
+		INNER JOIN t_boboface_service_tree tbst ON tbass.serviceTreeId = tbst.id
+		<where>
+			<if test="serviceTreeId != null">
+				AND tbst.id = #{serviceTreeId}
+			</if>
+		</where>
+	</select>
+</mapper>

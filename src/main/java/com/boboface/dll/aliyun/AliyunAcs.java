@@ -1,34 +1,32 @@
-package com.boboface.test.aliyun;
+package com.boboface.dll.aliyun;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse.Instance;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse.Instance.LockReason;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse.Instance.Tag;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.profile.IClientProfile;
 
+public class AliyunAcs extends AliyunClient {
+	
+	private static Logger logger = LoggerFactory.getLogger(AliyunAcs.class);
+	
+	private IAcsClient client;
+	
+	public AliyunAcs() {
+		super();
+		client = new DefaultAcsClient(profile);
+	}
 
-
-/**
- * 
- * Title:AliyunTest
- * Description:阿里云测试
- * @author    zwb
- * @date      2016年8月31日 下午6:11:55
- *
- */
-public class AliyunTest {
-	public void sample() {
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        IClientProfile profile = DefaultProfile.getProfile("cn-shenzhen", "LTAIyhWMyw09opY3", "ocejsAAcTGN7VA9CeVQaWGSViqasWI");
-        IAcsClient client = new DefaultAcsClient(profile);
-        try {
-        	DescribeInstancesResponse response = client.getAcsResponse(describe);
-        	for (Instance instance : response.getInstances()) {//实例列表
+	@Override
+	public List<Instance> findAllInstance() {
+		try {
+			DescribeInstancesResponse response = client.getAcsResponse(describe);
+			/*for (Instance instance : response.getInstances()) {
 				System.out.println("autoReleaseTime:" + instance.getAutoReleaseTime());
 				System.out.println("clusterId:" + instance.getClusterId());
 				System.out.println("creationTime:" + instance.getCreationTime());
@@ -84,12 +82,11 @@ public class AliyunTest {
 				for (String s : instance.getVpcAttributes().getPrivateIpAddress()) {
 					System.out.println("vpcAttributes->privateIpAddress" + index + ":" + s);
 				}
-			}
-        }catch (ClientException e) {
-        	e.printStackTrace();
-        }
-	}
-	public static void main(String[] args) {
-		new AliyunTest().sample();
+			}*/
+			return response.getInstances();
+		} catch (ClientException e) {
+			logger.error("ClientException error catch:", e);
+		}
+		return null;
 	}
 }

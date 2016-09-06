@@ -59,7 +59,7 @@ public class AdsController extends BaseController {
 	 */
 	@RequestMapping("/json/v1/ads/treeList/{type}")
 	public @ResponseBody PubRetrunMsg adsTreeListV1(@PathVariable("type") String type) throws CustomException{
-		if(!BaseUtil.isHave(type, "template","unitlScript")){
+		if(!BaseUtil.isHave(type, "template","unitlScript","server")){
 			logger.error("参数错误，参数：" + type + "，非template或unitlScript");
 			return new PubRetrunMsg(CODE._200001, null);
 		}

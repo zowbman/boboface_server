@@ -72,4 +72,3 @@ task copyXml(type: Copy){//\u4e00\u4e2atask \u53ea\u80fd\u5355\u4e2afrom\u548cin
 }
 
 jar.exclude 'logback-test.xml'
-jar.exclude 'jdbc'

@@ -16,7 +16,6 @@ import net.zowbman.base.util.BaseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,8 +214,7 @@ public class WikiController extends BaseController {
 		PageBean pageBean = new PageBean(pageNum, pageSize, "id", OrderStyleEnum.DESC);
 		List<TBobofaceWikiTree> tBobofaceWikiTrees = iWikiTreeService.findAllByPageBean(pageBean);
 		PageInfo<TBobofaceWikiTree> pageInfo = new PageInfo<TBobofaceWikiTree>(tBobofaceWikiTrees);
-		PageInfoCustom pageInfoCustom = new PageInfoCustom();
-		BeanUtils.copyProperties(pageInfo, pageInfoCustom);
+		PageInfoCustom pageInfoCustom = new PageInfoCustom(pageInfo);
 		data.put("list", tBobofaceWikiTrees);
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));

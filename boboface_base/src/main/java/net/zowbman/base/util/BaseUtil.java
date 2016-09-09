@@ -124,4 +124,24 @@ public class BaseUtil {
         map.put("common_date", listC);
         return map;
     }
+    
+    /**
+     * 统计指定字符串出现的个数
+     * @param str 字符串
+     * @param substr 指定字符
+     * @return
+     */
+	public static int calculate(String str, String substr) {
+		int ch = 0;
+		int j = 0;
+		String str1;
+		for (int i = 0; i <= str.length() - 1; i++) {
+			j = str.indexOf(substr);
+			str1 = str.substring(j + 1, str.length());//获取子字符串
+			str = str1;
+			if (j != -1)
+				ch++;
+		}
+		return ch;
+	}
 }

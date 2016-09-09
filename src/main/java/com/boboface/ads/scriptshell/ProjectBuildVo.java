@@ -2,8 +2,8 @@ package com.boboface.ads.scriptshell;
 
 import java.util.List;
 
-import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
+import com.boboface.ads.model.vo.AdsProjectBuildContent;
 
 public class ProjectBuildVo {
 	private Integer appId;//项目id
@@ -13,7 +13,7 @@ public class ProjectBuildVo {
 	private String appFolder;//项目目录地址
 	private String owner;//运行账号
 	private String ownerGroup;//账号属组
-	private TBobofaceAdsContent adsTemplate;//模板文件（一个环境一个模板文件）
+	private AdsProjectBuildContent adsContent;//模板文件（一个环境一个模板文件）
 	private List<TBobofaceAdsUntilscript> adsUntilScripts;//工具脚本(多个)
 	
 	/**
@@ -35,7 +35,7 @@ public class ProjectBuildVo {
 			String appFolder,
 			String owner,
 			String ownerGroup,
-			TBobofaceAdsContent adsTemplate,
+			AdsProjectBuildContent adsContent,
 			List<TBobofaceAdsUntilscript> adsUntilScripts){
 		this.appId = appId;
 		this.appName = appName;
@@ -44,7 +44,7 @@ public class ProjectBuildVo {
 		this.appFolder = appFolder;
 		this.owner = owner;
 		this.ownerGroup = ownerGroup;
-		this.adsTemplate = adsTemplate;
+		this.adsContent = adsContent;
 		this.adsUntilScripts = adsUntilScripts;
 	}
 	
@@ -90,11 +90,11 @@ public class ProjectBuildVo {
 	public void setOwnerGroup(String ownerGroup) {
 		this.ownerGroup = ownerGroup;
 	}
-	public TBobofaceAdsContent getAdsTemplate() {
-		return adsTemplate;
+	public AdsProjectBuildContent getAdsContent() {
+		return adsContent;
 	}
-	public void setAdsTemplate(TBobofaceAdsContent adsTemplate) {
-		this.adsTemplate = adsTemplate;
+	public void setAdsContent(AdsProjectBuildContent adsContent) {
+		this.adsContent = adsContent;
 	}
 	public List<TBobofaceAdsUntilscript> getAdsUntilScripts() {
 		return adsUntilScripts;

@@ -9,6 +9,7 @@ repositories {
 dependencies {
 	compile 'ch.qos.logback:logback-classic:1.1.7'
 	compile 'org.eclipse.jetty:jetty-webapp:9.3.0.M1'
+	compile 'com.github.pagehelper:pagehelper:4.1.1'
 }
 
 task say <<{

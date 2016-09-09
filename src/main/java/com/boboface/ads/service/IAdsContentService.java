@@ -2,7 +2,10 @@ package com.boboface.ads.service;
 
 import java.util.List;
 
+import net.zowbman.base.model.vo.EnvEnum;
+
 import com.boboface.ads.model.po.TBobofaceAdsContent;
+import com.boboface.ads.model.vo.AdsProjectBuildContent;
 import com.boboface.base.service.IBaseService;
 
 /**
@@ -20,4 +23,12 @@ public interface IAdsContentService extends IBaseService<TBobofaceAdsContent> {
 	 * @return List<TBobofaceAdsContent>
 	 */
 	List<TBobofaceAdsContent> getByAppId(Integer appId);
+	
+	/**
+	 * 根据环境变量获取映射文件和模板文件
+	 * @param appId 项目id
+	 * @param envEnum 环境变量
+	 * @return AdsProjectBuildContent
+	 */
+	AdsProjectBuildContent getByAppIdAndEnv(Integer appId, EnvEnum envEnum);
 }

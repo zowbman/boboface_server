@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.zowbman.base.helper.CodeHelper.CODE;
 import net.zowbman.base.helper.PageHelper;
+import net.zowbman.base.model.vo.EnvEnum;
 import net.zowbman.base.model.vo.OrderStyleEnum;
 import net.zowbman.base.model.vo.PageBean;
 import net.zowbman.base.model.vo.PageInfoCustom;
@@ -17,7 +18,6 @@ import net.zowbman.base.util.BaseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
 import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
+import com.boboface.ads.model.vo.AdsProjectBuildContent;
 import com.boboface.ads.model.vo.TBobofaceAdsContentVo;
 import com.boboface.ads.model.vo.TBobofaceAdsProjectBuildVo;
+import com.boboface.ads.model.vo.TBobofaceAdsProjectVo;
+import com.boboface.ads.model.vo.TBobofaceAdsUnitilscriptVo;
 import com.boboface.ads.scriptshell.OrdinaryProject;
 import com.boboface.ads.scriptshell.ProjectBuild;
 import com.boboface.ads.scriptshell.ProjectBuildVo;
@@ -165,8 +168,7 @@ public class AdsController extends BaseController {
 		PageBean pageBean = new PageBean(pageNum, pageSize, "id", OrderStyleEnum.DESC);
 		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByPageBeanAndSeviceTreeId(pageBean, serviceTreeId);
 		PageInfo<TBobofaceAdsProject> pageInfo = new PageInfo<TBobofaceAdsProject>(adsProjects);
-		PageInfoCustom pageInfoCustom = new PageInfoCustom();
-		BeanUtils.copyProperties(pageInfo, pageInfoCustom);
+		PageInfoCustom pageInfoCustom = new PageInfoCustom(pageInfo);
 		data.put("list", adsProjects);
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
@@ -174,10 +176,55 @@ public class AdsController extends BaseController {
 	}
 	
 	/**
+	 * 获取ads项目详细
+	 * @param appId 项目id
+	 * @return PubRetrunMsg
+	 */
+	@RequestMapping("/json/v1/ads/projectDetail/{id}")
+	public @ResponseBody PubRetrunMsg adsProjectDetailV1(@PathVariable("id") Integer appId){
+		Map<String, Object> data = new HashMap<String, Object>();
+		TBobofaceAdsProject adsProject = iAdsProjectService.getById(appId);
+		data.put("adsProject", adsProject);
+		return new PubRetrunMsg(CODE._100000, data);
+	}
+	
+	/**
+	 * 修改ads项目配置
+	 * @param adsProjectVo 参数包装类
+	 * @return PubRetrunMsg
+	 * @throws CustomException 
+	 */
+	@RequestMapping(value = "/json/v1/ads/projectEdit/{id}", method = RequestMethod.POST)
+	public @ResponseBody PubRetrunMsg adsProjectEditV1(@PathVariable("id") Integer appId, TBobofaceAdsProjectVo adsProjectVo) throws CustomException{
+		Map<String, Object> data = new HashMap<String, Object>();
+		
+		TBobofaceAdsProject adsProject = iAdsProjectService.getById(appId);
+		if(adsProject == null)
+			return new PubRetrunMsg(CODE._200001, null);
+		
+		if(!adsProject.getStoragepath().equals(adsProjectVo.getAdsProject().getStoragepath())){//如果存储路径非原本的，去查询是否已存在路径
+			boolean isExist = iAdsProjectService.findProjectStoragepathIsExist(adsProjectVo.getAdsProject().getStoragepath());
+			if(isExist)
+				return new PubRetrunMsg(CODE._200100, null);
+		}
+		
+		adsProject.setAppname(adsProjectVo.getAdsProject().getAppname());
+		adsProject.setGitpath(adsProjectVo.getAdsProject().getGitpath());
+		adsProject.setIntroduction(adsProjectVo.getAdsProject().getIntroduction());
+		adsProject.setRungroup(adsProjectVo.getAdsProject().getRungroup());
+		adsProject.setRunuser(adsProjectVo.getAdsProject().getRunuser());
+		adsProject.setServicetreeid(adsProjectVo.getAdsProject().getServicetreeid());
+		adsProject.setStoragepath(adsProjectVo.getAdsProject().getStoragepath());
+		iAdsProjectService.updateSeletive(adsProject);
+		data.put("msg", "ads项目配置修改成功");
+		return new PubRetrunMsg(CODE._100000, data);
+	}
+	
+	/**
 	 * ads 项目模板添加
 	 * @return
 	 */
-	@RequestMapping(value = "/json/v1/ads/projectTemplateAdd/{id}", method=RequestMethod.POST)
+	@RequestMapping(value = "/json/v1/ads/projectTemplateAdd/{id}", method = RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsProjectTemplateAddV1(@PathVariable("id") Integer appId){
 		return new PubRetrunMsg(CODE._100000, null);
 	}
@@ -186,10 +233,9 @@ public class AdsController extends BaseController {
 	 * ads 项目模板保存
 	 * @param tBobofaceAdsContentVo
 	 * @return
-	 * @throws CustomException 
 	 */
 	@RequestMapping(value = "/json/v1/ads/projectTemplate/save", method = RequestMethod.POST)
-	public @ResponseBody PubRetrunMsg adsProjectTemplateSaveV1(TBobofaceAdsContentVo tBobofaceAdsContentVo) throws CustomException{
+	public @ResponseBody PubRetrunMsg adsProjectTemplateSaveV1(TBobofaceAdsContentVo tBobofaceAdsContentVo){
 		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceAdsContent adsTemplate = iAdsContentService.getById(tBobofaceAdsContentVo.getAdsTemplate().getId());
 		if(adsTemplate == null){
@@ -200,6 +246,26 @@ public class AdsController extends BaseController {
 		adsTemplate.setContent(tBobofaceAdsContentVo.getAdsTemplate().getContent());
 		iAdsContentService.updateSeletive(adsTemplate);
 		data.put("msg", "模板文件保存成功");
+		return new PubRetrunMsg(CODE._100000, data);
+	}
+	
+	/**
+	 * ads 项目工具脚本文件保存
+	 * @param adsUnitilscriptVo
+	 * @return
+	 */
+	@RequestMapping(value = "/json/v1/ads/unitlScript/save", method = RequestMethod.POST)
+	public @ResponseBody PubRetrunMsg adsUnitlScriptSaveV1(TBobofaceAdsUnitilscriptVo adsUnitilscriptVo){
+		Map<String, Object> data = new HashMap<String, Object>();
+		TBobofaceAdsUntilscript adsUntilscript =iAdsUnitlScriptService.getById(adsUnitilscriptVo.getAdsUntilscript().getId());
+		if(adsUntilscript == null){
+			data.put("msg", "找不到所修改工具脚本文件，如正常操作出现的问题，请联系研发人员，保存失败");
+			logger.error("找不到所修改工具脚本文件，如正常操作出现的问题，请联系研发人员");
+			return new PubRetrunMsg(CODE._200000, data);
+		}
+		adsUntilscript.setContent(adsUnitilscriptVo.getAdsUntilscript().getContent());
+		iAdsUnitlScriptService.updateSeletive(adsUntilscript);
+		data.put("msg", "工具脚本文件保存成功");
 		return new PubRetrunMsg(CODE._100000, data);
 	}
 	
@@ -238,7 +304,8 @@ public class AdsController extends BaseController {
 		ProjectBuild projectBuild = new OrdinaryProject();
 		//如果tag为空，则发布branch
 		String targetCode = tBobofaceAdsProjectBuildVo.getBranchTag() != null ? tBobofaceAdsProjectBuildVo.getBranchTag() : tBobofaceAdsProjectBuildVo.getAppBranch();
-		List<TBobofaceAdsUntilscript> adsUnitlScripts = iAdsUnitlScriptService.getByAppId(adsProject.getId());
+		List<TBobofaceAdsUntilscript> adsUnitlScripts = iAdsUnitlScriptService.getByAppId(adsProject.getId());//工具脚本
+		AdsProjectBuildContent adsContent = iAdsContentService.getByAppIdAndEnv(adsProject.getId(), EnvEnum.online);//项目模板文件
 		
 		//准备发布参数
 		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
@@ -249,8 +316,8 @@ public class AdsController extends BaseController {
 				adsProject.getStoragepath(),//storagepath
 				adsProject.getRunuser(),//owner
 				adsProject.getRungroup(),//ownerGroup
-				null, 
-				adsUnitlScripts);
+				adsContent, //模板文件
+				adsUnitlScripts);//工具脚本
 		String buildResult = projectBuild.prepareProjectBuildTemplage(projectBuildVo);
 		data.put("buildResult", buildResult);
 		return new PubRetrunMsg(CODE._100000, data);

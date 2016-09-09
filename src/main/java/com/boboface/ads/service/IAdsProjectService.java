@@ -19,11 +19,18 @@ import com.boboface.exception.CustomException;
 public interface IAdsProjectService extends IBaseService<TBobofaceAdsProject> {
 	
 	/**
-	 * 
+	 * 根据业务树id获取项目列表(分页)
 	 * @param pageBean 分页信息
 	 * @param serviceTreeId 业务树id
 	 * @return List<TBobofaceAdsProject>
 	 * @throws CustomException
 	 */
 	List<TBobofaceAdsProject> findProjectListByPageBeanAndSeviceTreeId(PageBean pageBean, Integer serviceTreeId) throws CustomException;
+
+	/**
+	 * 存储路径是否已存在项目
+	 * @param storagepath 存储路径
+	 * @return boolean
+	 */
+	boolean findProjectStoragepathIsExist(String storagepath) throws CustomException;
 }

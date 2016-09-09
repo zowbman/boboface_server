@@ -1,5 +1,5 @@
 freemarker
-jdbc/jdbc.properties
+jdbc
 mybatis
 spring
 validation

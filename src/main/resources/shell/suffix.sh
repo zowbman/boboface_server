@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source rms.default.conf
+source ads.default.conf
 
 chmod +x $installPath/run.sh
 sudo -u $owner sh $installPath/run.sh restart

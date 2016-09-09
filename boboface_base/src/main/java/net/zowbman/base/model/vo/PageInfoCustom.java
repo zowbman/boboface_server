@@ -1,5 +1,8 @@
 package net.zowbman.base.model.vo;
 
+import com.github.pagehelper.PageInfo;
+
+
 public class PageInfoCustom {
     //当前页
     private int pageNum;
@@ -22,9 +25,9 @@ public class PageInfoCustom {
     private int lastPage;
 
     //是否为第一页
-    private boolean isFirstPage = false;
+    private boolean hasFirstPage = false;
     //是否为最后一页
-    private boolean isLastPage = false;
+    private boolean hasLastPage = false;
     //是否有前一页
     private boolean hasPreviousPage = false;
     //是否有下一页
@@ -33,6 +36,24 @@ public class PageInfoCustom {
     private int navigatePages;
     //所有导航页号
     private int[] navigatepageNums;
+    
+    public PageInfoCustom(PageInfo<?> pageInfo){
+    	this.pageNum = pageInfo.getPageNum();
+    	this.pageSize = pageInfo.getPageSize();
+    	this.size = pageInfo.getSize();
+    	this.total = pageInfo.getTotal();
+    	this.pages = pageInfo.getPages();
+    	this.firstPage = pageInfo.getFirstPage();
+    	this.prePage = pageInfo.getPrePage();
+    	this.nextPage = pageInfo.getNextPage();
+    	this.lastPage = pageInfo.getLastPage();
+    	this.hasFirstPage = pageInfo.isIsFirstPage();
+    	this.hasLastPage = pageInfo.isIsLastPage();
+    	this.hasPreviousPage = pageInfo.isHasPreviousPage();
+    	this.hasNextPage = pageInfo.isHasNextPage();
+    	this.navigatePages = pageInfo.getNavigatePages();
+    	this.navigatepageNums = pageInfo.getNavigatepageNums();
+    }
     
 	public int getPageNum() {
 		return pageNum;
@@ -88,17 +109,17 @@ public class PageInfoCustom {
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
-	public boolean isFirstPage() {
-		return isFirstPage;
+	public boolean isHasFirstPage() {
+		return hasFirstPage;
 	}
-	public void setFirstPage(boolean isFirstPage) {
-		this.isFirstPage = isFirstPage;
+	public void setHasFirstPage(boolean hasFirstPage) {
+		this.hasFirstPage = hasFirstPage;
 	}
-	public boolean isLastPage() {
-		return isLastPage;
+	public boolean isHasLastPage() {
+		return hasLastPage;
 	}
-	public void setLastPage(boolean isLastPage) {
-		this.isLastPage = isLastPage;
+	public void setHasLastPage(boolean hasLastPage) {
+		this.hasLastPage = hasLastPage;
 	}
 	public boolean isHasPreviousPage() {
 		return hasPreviousPage;

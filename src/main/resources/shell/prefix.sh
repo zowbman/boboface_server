@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source rms.default.conf
+source ads.default.conf
 
 time=$(/usr/bin/sudo -u $owner /bin/date +%Y%m%d%H%M)
 /usr/bin/sudo -u $owner /bin/mkdir -p ${installPath}_${time}_${curVersion}

@@ -1,8 +1,5 @@
 package com.boboface.base.controller;
 
-import net.zowbman.base.data.type.conversion.string.IStringDataTypeConversion;
-import net.zowbman.base.data.type.conversion.string.impl.StringDataTypeConversionImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

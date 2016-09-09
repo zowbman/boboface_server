@@ -46,4 +46,18 @@ public class AdsProjectServiceImpl extends BaseServiceImpl<TBobofaceAdsProject> 
 		example.createCriteria().andEqualTo("servicetreeid", serviceTreeId);
 		return tBobofaceAdsProjectMapper.selectByExample(example);
 	}
+
+	@Override
+	public boolean findProjectStoragepathIsExist(String storagepath) throws CustomException {
+		if(storagepath == null){
+			throw new CustomException("存储路径不允许为空");
+		}
+		Example example = new Example(TBobofaceAdsProject.class);
+		example.createCriteria().andEqualTo("storagepath", storagepath);
+		int count = tBobofaceAdsProjectMapper.selectCountByExample(example);
+		if(count > 0){
+			return true;
+		}
+		return false;
+	}
 }

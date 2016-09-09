@@ -9,6 +9,7 @@ public class ProjectBuildVo {
 	private Integer appId;//项目id
 	private String appName;//项目名称
 	private String gitPath;//git地址
+	private String ip;//部署目标机器
 	private String targetCode;//分支|tag
 	private String appFolder;//项目目录地址
 	private String owner;//运行账号
@@ -20,6 +21,7 @@ public class ProjectBuildVo {
 	 * @param appId 项目id
 	 * @param appName 项目名称
 	 * @param gitPath git地址
+	 * @param ip 部署目标机器
 	 * @param targetCode 分支|tag
 	 * @param appFolder 项目目录地址
 	 * @param owner 运行账号
@@ -31,6 +33,7 @@ public class ProjectBuildVo {
 			Integer appId,
 			String appName, 
 			String gitPath,
+			String ip,
 			String targetCode,
 			String appFolder,
 			String owner,
@@ -40,6 +43,7 @@ public class ProjectBuildVo {
 		this.appId = appId;
 		this.appName = appName;
 		this.gitPath = gitPath;
+		this.ip = ip;
 		this.targetCode = targetCode;
 		this.appFolder = appFolder;
 		this.owner = owner;
@@ -101,5 +105,11 @@ public class ProjectBuildVo {
 	}
 	public void setAdsUntilScripts(List<TBobofaceAdsUntilscript> adsUntilScripts) {
 		this.adsUntilScripts = adsUntilScripts;
+	}
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 }

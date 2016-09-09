@@ -245,14 +245,17 @@ public abstract class ProjectBuild {
 	}
 	
 	/**
-	 * 4、创建临时目录以及下载工具脚本配置模板以及项目代码
-	 * @param appId
+	 * 4、上机操作(在目标机器创建临时目录，下载相关配置文件以及脚本、运行前置脚本、部署代码、运行后置脚本)
+	 * @param appId 项目id
+	 * @param appName 项目名称
+	 * @param ip 目标机器
+	 * @param installPath 部署路径
 	 */
-	private void onlineOperation(Integer appId, String appName){
+	private void onlineOperation(Integer appId, String appName, String ip, String installPath){
 		String path = getClass().getResource("/").getPath();
 		path += "shell/ads.onlineOperation.sh ";
 		tempStrings.add("dos2unix " + path);
-		tempStrings.add("sh " + path + appId + " " + appName + " 2>&1");
+		tempStrings.add("sh " + path + appId + " " + appName + " " + ip + " " + installPath +" 2>&1");
 	}
 	
 	/**

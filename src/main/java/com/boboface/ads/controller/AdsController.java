@@ -314,6 +314,7 @@ public class AdsController extends BaseController {
 				adsProject.getId(),//appId
 				adsProject.getAppname(),//appName
 				adsProject.getGitpath(),//gitPath
+				tBobofaceAdsProjectBuildVo.getIp(),//ip
 				targetCode,//code
 				adsProject.getStoragepath(),//storagepath
 				adsProject.getRunuser(),//owner

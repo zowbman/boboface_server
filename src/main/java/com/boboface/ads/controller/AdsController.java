@@ -300,6 +300,8 @@ public class AdsController extends BaseController {
 			data.put("msg", "不存在发布项目");
 			return new PubRetrunMsg(CODE._200001, data);
 		}
+		
+		
 		//项目部署
 		ProjectBuild projectBuild = new OrdinaryProject();
 		//如果tag为空，则发布branch

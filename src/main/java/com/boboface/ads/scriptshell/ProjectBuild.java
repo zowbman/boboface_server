@@ -67,7 +67,7 @@ public abstract class ProjectBuild {
 		tempStrings = new ArrayList<String>();
 		//4、上机操作(在目标机器创建临时目录，下载相关配置文件以及脚本、运行前置脚本、部署代码、运行后置脚本)
 		ready();
-		createTmpDirectoryAndDowmLoad(projectBuildVo.getAppId(), projectBuildVo.getAppName());
+		onlineOperation(projectBuildVo.getAppId(), projectBuildVo.getAppName());
 		runShell();//跑一次脚本
 		
 		return lineResult;
@@ -248,7 +248,7 @@ public abstract class ProjectBuild {
 	 * 4、创建临时目录以及下载工具脚本配置模板以及项目代码
 	 * @param appId
 	 */
-	private void createTmpDirectoryAndDowmLoad(Integer appId, String appName){
+	private void onlineOperation(Integer appId, String appName){
 		String path = getClass().getResource("/").getPath();
 		path += "shell/ads.onlineOperation.sh ";
 		tempStrings.add("dos2unix " + path);

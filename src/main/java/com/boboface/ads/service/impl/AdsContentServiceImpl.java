@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
 
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.vo.AdsProjectBuildContent;
@@ -54,11 +55,15 @@ public class AdsContentServiceImpl extends BaseServiceImpl<TBobofaceAdsContent> 
 			title = "default.map.pre";
 		}
 		
-		example.createCriteria().andEqualTo("title", "tpl.setting");
+		Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("appid", appId);
+		criteria.andEqualTo("title", "tpl.setting");
 		mappingFile = tBobofaceAdsContentMapper.selectByExample(example).iterator().next();
+		
 		example = new Example(TBobofaceAdsContent.class);
-		example.createCriteria().andEqualTo("title", title);
-		example.createCriteria().andEqualTo("appid", appId);
+		criteria = example.createCriteria();
+		criteria.andEqualTo("appid", appId);
+		criteria.andEqualTo("title", title);
 		templateFile = tBobofaceAdsContentMapper.selectByExample(example).iterator().next();
 		
 		AdsProjectBuildContent adsProjectBuildContent = new AdsProjectBuildContent(appId,mappingFile.getContent(),templateFile.getContent(),envEnum);

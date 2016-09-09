@@ -2,9 +2,13 @@ package com.boboface.ads.service;
 
 import java.util.List;
 
+import net.zowbman.base.model.vo.PageBean;
+import net.zowbman.base.model.vo.PageInfoCustom;
+
 import com.boboface.ads.model.po.TBobofaceAdsServer;
 import com.boboface.ads.model.po.TBobofaceAdsServerCustom;
 import com.boboface.base.service.IBaseService;
+import com.boboface.exception.CustomException;
 
 /**
  * 
@@ -48,4 +52,12 @@ public interface IAdsServerService extends IBaseService<TBobofaceAdsServer> {
 	 * @return List<TBobofaceAdsServer>
 	 */
 	List<TBobofaceAdsServer> findServerByServiceTreeId(Integer serviceTreeId);
+	
+	/**
+	 * 根据业务树id查询服务器(分页)
+	 * @param pageBean 分页信息
+	 * @param serviceTreeId 业务树id
+	 * @return PageInfoCustom
+	 */
+	PageInfoCustom findServerByPageBeanAndServiceTreeId(PageBean pageBean, Integer serviceTreeId) throws CustomException;
 }

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.zowbman.base.model.vo.PageBean;
+import net.zowbman.base.model.vo.PageInfoCustom;
+
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
@@ -13,6 +16,7 @@ import com.boboface.ads.model.po.TBobofaceAdsServer;
 import com.boboface.ads.model.po.TBobofaceAdsServerCustom;
 import com.boboface.ads.service.IAdsServerService;
 import com.boboface.base.service.impl.BaseServiceImpl;
+import com.boboface.exception.CustomException;
 
 /**
  * 
@@ -82,5 +86,20 @@ public class AdsServerServiceImpl extends BaseServiceImpl<TBobofaceAdsServer> im
 			tBobofaceAdsServers = tBobofaceAdsServerMapperCustom.findServerByIpsAndServiceTreeId(map);
 		}
 		return tBobofaceAdsServers;
+	}
+
+	@Override
+	public PageInfoCustom findServerByPageBeanAndServiceTreeId(PageBean pageBean, Integer serviceTreeId) throws CustomException {
+		if(pageBean == null || pageBean.getStart() == null || pageBean.getEnd() == null)
+			throw new CustomException("分页数据不允许为空");
+		if(serviceTreeId == null)
+			throw new CustomException("serviceTreeId不允许为空");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", pageBean.getStart() == -1 ? null : pageBean.getStart());//未整合合理化
+		map.put("end", pageBean.getEnd());
+		map.put("id", serviceTreeId);
+		List<TBobofaceAdsServer> adsServers = tBobofaceAdsServerMapperCustom.findServerByPageBeanAndServiceTreeId(map);//查询
+		long count = tBobofaceAdsServerMapperCustom.findServerCountByPageBeanAndServiceTreeId(serviceTreeId);//查询总记录数
+		return new PageInfoCustom(pageBean.getPageNum(), pageBean.getPageSize(), count, adsServers);
 	}
 }

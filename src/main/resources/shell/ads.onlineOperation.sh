@@ -10,6 +10,8 @@ appId=$1
 appName=$2
 ip=$3
 installPath=$4
+runUser=$5
+runGroup=$6
 
 # 1. create tmp directory
 
@@ -30,6 +32,8 @@ echo "==下载工具脚本成功=="
 echo ""
 
 scp -r root@$ip:/__bobofaceAdsCompile__/$appId/$appName/outer/* /__bobofaceAds__/$appId
+
+ssh -p 22 root@$ip chown -R $runUser.$runGroup /__bobofaceAds__/$appId
 
 echo "==下载项目代码成功=="
 

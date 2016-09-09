@@ -1,5 +1,8 @@
 package net.zowbman.base.model.vo;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.pagehelper.PageInfo;
 
 
@@ -37,6 +40,9 @@ public class PageInfoCustom {
     //所有导航页号
     private int[] navigatepageNums;
     
+    @JsonIgnore
+    private List<?> recordList;
+    
     public PageInfoCustom(PageInfo<?> pageInfo){
     	this.pageNum = pageInfo.getPageNum();
     	this.pageSize = pageInfo.getPageSize();
@@ -55,6 +61,87 @@ public class PageInfoCustom {
     	this.navigatepageNums = pageInfo.getNavigatepageNums();
     }
     
+    /**
+     * 多表分页查询
+     * @param pageNum 当前页
+     * @param pageSize 当前页数量
+     * @param count 总页数
+     * @param recordList
+     */
+    public PageInfoCustom(Integer pageNum, Integer pageSize, long count,List<?> recordList){
+    	this.pageNum = pageNum;//当前页
+    	this.pageSize = pageSize;//每页显示多少条
+    	this.total = count;//总数量
+    	this.pages = (int) ((this.total + this.pageSize - 1) / this.pageSize);//总页码
+    	this.recordList = recordList;//数据
+    	this.navigatePages = 8;//默认8条
+    	calcNavigatepageNums();//计算导航页
+    	calcPage();//计算前后页，第一页，最后一页
+    	judgePageBoudary();//判定页面边界
+    }
+    
+    /**
+     * 计算导航页
+     */
+    private void calcNavigatepageNums() {
+        //当总页数小于或等于导航页码数时
+        if (pages <= navigatePages) {
+            navigatepageNums = new int[pages];
+            for (int i = 0; i < pages; i++) {
+                navigatepageNums[i] = i + 1;
+            }
+        } else { //当总页数大于导航页码数时
+            navigatepageNums = new int[navigatePages];
+            int startNum = pageNum - navigatePages / 2;
+            int endNum = pageNum + navigatePages / 2;
+
+            if (startNum < 1) {
+                startNum = 1;
+                //(最前navigatePages页
+                for (int i = 0; i < navigatePages; i++) {
+                    navigatepageNums[i] = startNum++;
+                }
+            } else if (endNum > pages) {
+                endNum = pages;
+                //最后navigatePages页
+                for (int i = navigatePages - 1; i >= 0; i--) {
+                    navigatepageNums[i] = endNum--;
+                }
+            } else {
+                //所有中间页
+                for (int i = 0; i < navigatePages; i++) {
+                    navigatepageNums[i] = startNum++;
+                }
+            }
+        }
+    }
+    
+    /**
+     * 计算前后页，第一页，最后一页
+     */
+    private void calcPage() {
+        if (navigatepageNums != null && navigatepageNums.length > 0) {
+            firstPage = navigatepageNums[0];
+            lastPage = navigatepageNums[navigatepageNums.length - 1];
+            if (pageNum > 1) {
+                prePage = pageNum - 1;
+            }
+            if (pageNum < pages) {
+                nextPage = pageNum + 1;
+            }
+        }
+    }
+    
+    /**
+     * 判定页面边界
+     */
+    private void judgePageBoudary() {
+        hasFirstPage = pageNum == 1;
+        hasLastPage = pageNum == pages;
+        hasPreviousPage = pageNum > 1;
+        hasNextPage = pageNum < pages;
+    }
+   
 	public int getPageNum() {
 		return pageNum;
 	}
@@ -144,5 +231,11 @@ public class PageInfoCustom {
 	}
 	public void setNavigatepageNums(int[] navigatepageNums) {
 		this.navigatepageNums = navigatepageNums;
+	}
+	public List<?> getRecordList() {
+		return recordList;
+	}
+	public void setRecordList(List<?> recordList) {
+		this.recordList = recordList;
 	}   
 }

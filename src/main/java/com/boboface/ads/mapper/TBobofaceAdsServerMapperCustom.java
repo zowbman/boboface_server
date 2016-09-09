@@ -43,4 +43,21 @@ public interface TBobofaceAdsServerMapperCustom {
 	 * @return List<TBobofaceAdsServer>
 	 */
 	List<TBobofaceAdsServer> findServerByIpsAndServiceTreeId(Map<String, Object> map);
+	
+	/**
+	 * 根据业务树id查询服务器列表（分页）
+	 * @param map
+	 * start->分页（开始）
+	 * end->一页数量
+	 * id->业务树id
+	 * @return
+	 */
+	List<TBobofaceAdsServer> findServerByPageBeanAndServiceTreeId(Map<String, Object> map);
+	
+	/**
+	 * 根据业务树id查询服务器总数
+	 * @param serverTreeId 业务树id
+	 * @return long
+	 */
+	long findServerCountByPageBeanAndServiceTreeId(Integer serverTreeId);
 }

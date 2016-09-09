@@ -13,6 +13,10 @@ public class PageBean {
 	private Integer pageSize = 8;//一页数据量（默认8）
 	private String orderByColumn;//排序列
 	private OrderStyleEnum orderStyleEnum;//排序方式
+	//不是用通用mapper进行分页
+	private Integer start;
+	private Integer end;
+	
 	
 	public PageBean() {
 		super();
@@ -25,6 +29,8 @@ public class PageBean {
 			this.pageSize = pageSize;
 		this.orderByColumn = orderByColumn;
 		this.orderStyleEnum = orderStyleEnum;
+		this.start = (this.pageNum - 1) * this.pageSize;
+		this.end = this.pageSize;
 	}
 	
 	public Integer getPageNum() {
@@ -50,5 +56,17 @@ public class PageBean {
 	}
 	public void setOrderStyleEnum(OrderStyleEnum orderStyleEnum) {
 		this.orderStyleEnum = orderStyleEnum;
+	}
+	public Integer getStart() {
+		return start;
+	}
+	public void setStart(Integer start) {
+		this.start = start;
+	}
+	public Integer getEnd() {
+		return end;
+	}
+	public void setEnd(Integer end) {
+		this.end = end;
 	}
 }

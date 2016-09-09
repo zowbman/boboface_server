@@ -287,6 +287,27 @@ public class AdsController extends BaseController {
 	}
 	
 	/**
+	 * 获取 ads 项目部署 机器列表
+	 * @param serviceTreeId 业务树id
+	 * @param pageNum 页码
+	 * @param pageSize 当前页数量
+	 * @param request
+	 * @return
+	 * @throws CustomException
+	 */
+	@RequestMapping("/json/v1/ads/projectServerList/{id}")
+	public @ResponseBody PubRetrunMsg adsProjectServerListV1(@PathVariable("id") Integer serviceTreeId, @RequestParam(defaultValue = "1") Integer pageNum, 
+			@RequestParam(defaultValue = "5") Integer pageSize, HttpServletRequest request) throws CustomException{
+		PageBean pageBean = new PageBean(pageNum, pageSize, null, null);
+		Map<String, Object> data = new HashMap<String, Object>();
+		PageInfoCustom pageInfoCustom = iAdsServerService.findServerByPageBeanAndServiceTreeId(pageBean, serviceTreeId);
+		data.put("list", pageInfoCustom.getRecordList());
+		data.put("pageInfo", pageInfoCustom);
+		data.put("pageUrl", PageHelper.pageUrl(request));
+		return new PubRetrunMsg(CODE._100000, data);
+	}
+	
+	/**
 	 * ads 项目部署
 	 * @param tBobofaceAdsProjectBuildVo
 	 * @return
@@ -300,15 +321,12 @@ public class AdsController extends BaseController {
 			data.put("msg", "不存在发布项目");
 			return new PubRetrunMsg(CODE._200001, data);
 		}
-		
-		
 		//项目部署
 		ProjectBuild projectBuild = new OrdinaryProject();
 		//如果tag为空，则发布branch
 		String targetCode = tBobofaceAdsProjectBuildVo.getBranchTag() != null ? tBobofaceAdsProjectBuildVo.getBranchTag() : tBobofaceAdsProjectBuildVo.getAppBranch();
 		List<TBobofaceAdsUntilscript> adsUnitlScripts = iAdsUnitlScriptService.getByAppId(adsProject.getId());//工具脚本
 		AdsProjectBuildContent adsContent = iAdsContentService.getByAppIdAndEnv(adsProject.getId(), EnvEnum.online);//项目模板文件
-		
 		//准备发布参数
 		ProjectBuildVo projectBuildVo = new ProjectBuildVo(
 				adsProject.getId(),//appId

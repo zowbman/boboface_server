@@ -67,4 +67,39 @@
 			</if>
 		</where>
 	</select>
+	<!-- 根据业务树id查询服务器列表（分页） -->
+	<select id="findServerByPageBeanAndServiceTreeId" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+			tbas.*
+		FROM
+			t_boboface_ads_server_servicetree tbass
+		INNER JOIN t_boboface_ads_server tbas ON tbass.serverId = tbas.id
+		<where>
+			<if test="id != null">
+				AND tbass.serviceTreeId = #{id}
+			</if>
+			<if test="start != null and end != null">
+				LIMIT #{start},#{end}
+			</if>
+			<if test="id == null or start == null or end == null">
+				AND 1 = 0
+			</if>
+		</where>
+	</select>
+	<!-- 根据业务树id查询服务器总数 -->
+	<select id="findServerCountByPageBeanAndServiceTreeId" resultType="java.lang.Long" parameterType="int">
+		SELECT
+			count(tbas.id)
+		FROM
+			t_boboface_ads_server_servicetree tbass
+		INNER JOIN t_boboface_ads_server tbas ON tbass.serverId = tbas.id
+		<where>
+			<if test="value != null">
+				AND tbass.serviceTreeId = #{value}
+			</if>
+			<if test="value == null">
+				AND 1 = 0
+			</if>
+		</where>
+	</select>
 </mapper>

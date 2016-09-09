@@ -67,7 +67,7 @@ public abstract class ProjectBuild {
 		tempStrings = new ArrayList<String>();
 		//4、上机操作(在目标机器创建临时目录，下载相关配置文件以及脚本、运行前置脚本、部署代码、运行后置脚本)
 		ready();
-		onlineOperation(projectBuildVo.getAppId(), projectBuildVo.getAppName());
+		onlineOperation(projectBuildVo);
 		runShell();//跑一次脚本
 		
 		return lineResult;
@@ -91,7 +91,7 @@ public abstract class ProjectBuild {
 		projectBuildVo.getAppId() + " " +
 		projectBuildVo.getAppName() + " " +
 		projectBuildVo.getGitPath() + " " +
-		projectBuildVo.getTargetCode() + " 2>&1");
+		projectBuildVo.getTargetCode() +" 2>&1");
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public abstract class ProjectBuild {
 		tempAdsDefaultConf.set(1, tempAdsDefaultConf.get(1).replaceAll(regexStr, projectBuildVo.getAppName()));//projectName
 		tempAdsDefaultConf.set(2, tempAdsDefaultConf.get(2).replaceAll(regexStr, "/__bobofaceAds__/adsTools/" + projectBuildVo.getAppId()));//curPath
 		tempAdsDefaultConf.set(3, tempAdsDefaultConf.get(3).replaceAll(regexStr, "/__bobofaceAds__/" + projectBuildVo.getAppId()));//tmpPath
-		tempAdsDefaultConf.set(4, tempAdsDefaultConf.get(4).replaceAll(regexStr, projectBuildVo.getAppFolder()));//installPath
+		tempAdsDefaultConf.set(4, tempAdsDefaultConf.get(4).replaceAll(regexStr, projectBuildVo.getAppFolder() + "/" + projectBuildVo.getAppName()));//installPath
 		tempAdsDefaultConf.set(5, tempAdsDefaultConf.get(5).replaceAll(regexStr, projectBuildVo.getOwner()));//owner
 		tempAdsDefaultConf.set(6, tempAdsDefaultConf.get(6).replaceAll(regexStr, projectBuildVo.getOwnerGroup()));//ownerGroup
 		tempAdsDefaultConf.set(7, tempAdsDefaultConf.get(7).replaceAll(regexStr, ""));//lastVersion
@@ -139,12 +139,12 @@ public abstract class ProjectBuild {
 				String value = values[1].trim();
 				if("file".equals(key)){//如果key为'file'
 					insConfFiles.add(value);
+					logger.info("映射文件参数:" + key + "|" + value);
 				}
 			}
 		}
 		
 		List<String> templateFile = Arrays.asList(projectBuildVo.getAdsContent().getTemplateFile().split("\n"));//回车分割
-		
 		//封装模板参数为map
 		Map<String, String> templateMap = new HashMap<String, String>();
 		for (String line : templateFile) {
@@ -153,6 +153,7 @@ public abstract class ProjectBuild {
 				String key = values[0].trim();
 				String value = values[1].trim();
 				templateMap.put(key, value);
+				logger.info("模板参数:" + key + "|" + value);
 			}
 		}
 		
@@ -162,7 +163,6 @@ public abstract class ProjectBuild {
 			String newText = "";
 			lineResult += "开始实例化配置文件:" + file + "<br>";
 			for (String text : listText) {
-				System.out.println(text);
 				Map<Integer, Integer> coordinate = instanceCoordinate(text, new HashMap<Integer, Integer>(), 0);
 				//查找出来的坐标key进行排序（否则出现越界）
 				if(coordinate != null){
@@ -179,6 +179,7 @@ public abstract class ProjectBuild {
 					while(it.hasNext()){
 						Entry<Integer, Integer> entry = it.next();
 						String templateKey = text.substring(entry.getKey() + 1, entry.getValue() - 1);
+						logger.info(templateKey+"坐标:"+ (entry.getKey() + 1)+":"+ (entry.getValue() - 1));	
 						String templateValue = templateMap.get(templateKey);
 						if(templateValue != null){//从模板文件中查询到值
 							newText += text.substring(index, entry.getKey()) + templateValue;//替换模板中的值
@@ -227,7 +228,7 @@ public abstract class ProjectBuild {
 				}catch(StringIndexOutOfBoundsException ex){}
 				if("\\".equals(lescape)){//左边是转义@
 					text = text.substring(pos + 1, text.length());
-					test1(text, coordinate, pos + index + 1);
+					instanceCoordinate(text, coordinate, pos + index + 1);
 				}else if("\\".equals(rescape)){//右边是转义@
 					String temp = text.substring(pos + s.length() + 2,text.length());
 					if(temp.indexOf("\\@") != -1){
@@ -246,16 +247,18 @@ public abstract class ProjectBuild {
 	
 	/**
 	 * 4、上机操作(在目标机器创建临时目录，下载相关配置文件以及脚本、运行前置脚本、部署代码、运行后置脚本)
-	 * @param appId 项目id
-	 * @param appName 项目名称
-	 * @param ip 目标机器
-	 * @param installPath 部署路径
+	 * @param projectBuildVo
 	 */
-	private void onlineOperation(Integer appId, String appName, String ip, String installPath){
+	private void onlineOperation(ProjectBuildVo projectBuildVo){
 		String path = getClass().getResource("/").getPath();
 		path += "shell/ads.onlineOperation.sh ";
 		tempStrings.add("dos2unix " + path);
-		tempStrings.add("sh " + path + appId + " " + appName + " " + ip + " " + installPath +" 2>&1");
+		tempStrings.add("sh " + path + projectBuildVo.getAppId() + " " +
+				projectBuildVo.getAppName() + " " +
+				projectBuildVo.getIp() + " " + 
+				projectBuildVo.getAppFolder() + "/" + projectBuildVo.getAppName() + " " +
+				projectBuildVo.getOwner() + " " +
+				projectBuildVo.getOwnerGroup() + " " + " 2>&1");
 	}
 	
 	/**
@@ -272,7 +275,9 @@ public abstract class ProjectBuild {
 		lineResult += ShellHandler.process(strings);
 	}
 	
-	public static void main(String[] args) {
+	
+	//测试实例化模板文件代码
+	/*public static void main(String[] args) {
 		//\@xxxx@yyy@xxxx
 		//xxxxx@yyyxxxxx
 		//xxx @yyyy@ xx\@xxxx @yyyyy@ xxxxx
@@ -283,10 +288,7 @@ public abstract class ProjectBuild {
 			System.out.println(text.substring(key +1,coordinate.get(key)-1));
 			System.out.println("key->" + key + ",value->" +  coordinate.get(key));
 		}
-		
 		System.out.println(text);
-		
-		
 	}
 	
 	private static Map<Integer, Integer> test1(String text, Map<Integer, Integer> coordinate, int index){
@@ -325,5 +327,5 @@ public abstract class ProjectBuild {
 			}
 		}
 		return coordinate.size() != 0 ? coordinate : null;
-	}	
+	}	*/
 }

@@ -28,6 +28,7 @@ import com.boboface.ads.controller.AdsController;
 import com.boboface.ads.model.po.AdsUnitl;
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
+import com.boboface.ads.model.po.TBobofaceAdsServer;
 import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
 import com.boboface.ads.model.vo.TBobofaceAdsProjectVo;
 import com.boboface.base.controller.BaseController;
@@ -188,10 +189,14 @@ public class ServiceTreeController extends BaseController {
 		}
 		//查询业务树所挂载项目
 		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByServiceTreeId(serviceTreeId);
-		if(adsProjects == null || adsProjects.size() == 0){
+		if(adsProjects != null && adsProjects.size() > 0){
 			return new PubRetrunMsg(CODE.D200300);
 		}
 		//查询业务树所挂载服务器
+		List<TBobofaceAdsServer> adsServers = iAdsServerService.findServerByServiceTreeId(serviceTreeId);
+		if(adsServers != null && adsServers.size() > 0){
+			return new PubRetrunMsg(CODE.D200303);
+		}
 		
 		TBobofaceServiceTree tBobofaceServiceTree = iServiceTreeService.getById(serviceTreeId);
 		if(tBobofaceServiceTree == null){

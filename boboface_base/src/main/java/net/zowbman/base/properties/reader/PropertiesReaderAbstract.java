@@ -38,7 +38,7 @@ public abstract class PropertiesReaderAbstract {
 			if(value == null){
 				logger.error("没有该属性的值：" + key);
 			}else{
-				value = new String(value.getBytes("ISO-8859-1"),"UTF-8");
+				//value = new String(value.getBytes("ISO-8859-1"),"UTF-8");
 			}
 			return value;
 		}catch(Throwable e){

@@ -39,7 +39,7 @@ public class HighLevelController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		Integer status = HighLevelStatus.getStatus(request, response);
 		data.put("status", status);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -70,10 +70,10 @@ public class HighLevelController extends BaseController {
 			msg = "退出高权状态成功,3秒后重置页面";
 			httpSession.removeAttribute("whosyourdaddy");
 		}else{//高权密钥错误
-			return new PubRetrunMsg(CODE._200005, null);
+			return new PubRetrunMsg(CODE.D200400, "高权密钥错误,cmd:" + cmd);
 		}
 		data.put("status", status);
 		data.put("msg", msg);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 }

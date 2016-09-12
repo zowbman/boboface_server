@@ -166,7 +166,7 @@ public class AdsController extends BaseController {
 			@RequestParam(defaultValue = "15") Integer pageSize, HttpServletRequest request) throws CustomException{
 		Map<String, Object> data = new HashMap<String, Object>();
 		PageBean pageBean = new PageBean(pageNum, pageSize, "id", OrderStyleEnum.DESC);
-		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByPageBeanAndSeviceTreeId(pageBean, serviceTreeId);
+		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByPageBeanAndServiceTreeId(pageBean, serviceTreeId);
 		PageInfo<TBobofaceAdsProject> pageInfo = new PageInfo<TBobofaceAdsProject>(adsProjects);
 		PageInfoCustom pageInfoCustom = new PageInfoCustom(pageInfo);
 		data.put("list", adsProjects);

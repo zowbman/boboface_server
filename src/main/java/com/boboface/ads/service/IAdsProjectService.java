@@ -25,7 +25,16 @@ public interface IAdsProjectService extends IBaseService<TBobofaceAdsProject> {
 	 * @return List<TBobofaceAdsProject>
 	 * @throws CustomException
 	 */
-	List<TBobofaceAdsProject> findProjectListByPageBeanAndSeviceTreeId(PageBean pageBean, Integer serviceTreeId) throws CustomException;
+	List<TBobofaceAdsProject> findProjectListByPageBeanAndServiceTreeId(PageBean pageBean, Integer serviceTreeId) throws CustomException;
+	
+	
+	/**
+	 * 根据业务树id获取项目列表
+	 * @param serviceTreeId 业务树id
+	 * @return List<TBobofaceAdsProject>
+	 * @throws CustomException
+	 */
+	List<TBobofaceAdsProject> findProjectListByServiceTreeId(Integer serviceTreeId) throws CustomException;
 
 	/**
 	 * 存储路径是否已存在项目

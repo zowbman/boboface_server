@@ -63,8 +63,7 @@ public class AdsController extends BaseController {
 	@RequestMapping("/json/v1/ads/treeList/{type}")
 	public @ResponseBody PubRetrunMsg adsTreeListV1(@PathVariable("type") String type) throws CustomException{
 		if(!BaseUtil.isHave(type, "template","unitlScript","server")){
-			logger.error("参数错误，参数：" + type + "，非template或unitlScript");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001,"参数错误,参数:" + type + ",非template或unitlScript");
 		}
 		
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -127,19 +126,18 @@ public class AdsController extends BaseController {
 			}
 		}
 		data.put("list", listMap);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
 	 * 获取ads配置模板
-	 * @param appId
+	 * @param appId 项目id
 	 * @return PubRetrunMsg
 	 */
 	@RequestMapping("/json/v1/ads/content/{id}/{type}")
 	public @ResponseBody PubRetrunMsg adsContentV1(@PathVariable("id") Integer appId, @PathVariable("type") String type){
 		if(!BaseUtil.isHave(type, "template","unitlScript")){
-			logger.error("参数错误，参数：" + type + "，非template或unitlScript");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,参数:" + type + "，非template或unitlScript");
 		}
 		Map<String, Object> data = new HashMap<String, Object>();
 		if("template".equals(type)){//获取模板文件
@@ -149,7 +147,7 @@ public class AdsController extends BaseController {
 			TBobofaceAdsUntilscript tBobofaceAdsUntilscript = iAdsUnitlScriptService.getById(appId);
 			data.put("content", tBobofaceAdsUntilscript);
 		}
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -166,13 +164,13 @@ public class AdsController extends BaseController {
 			@RequestParam(defaultValue = "15") Integer pageSize, HttpServletRequest request) throws CustomException{
 		Map<String, Object> data = new HashMap<String, Object>();
 		PageBean pageBean = new PageBean(pageNum, pageSize, "id", OrderStyleEnum.DESC);
-		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByPageBeanAndSeviceTreeId(pageBean, serviceTreeId);
+		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByPageBeanAndServiceTreeId(pageBean, serviceTreeId);
 		PageInfo<TBobofaceAdsProject> pageInfo = new PageInfo<TBobofaceAdsProject>(adsProjects);
 		PageInfoCustom pageInfoCustom = new PageInfoCustom(pageInfo);
 		data.put("list", adsProjects);
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -185,7 +183,7 @@ public class AdsController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceAdsProject adsProject = iAdsProjectService.getById(appId);
 		data.put("adsProject", adsProject);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -196,16 +194,14 @@ public class AdsController extends BaseController {
 	 */
 	@RequestMapping(value = "/json/v1/ads/projectEdit/{id}", method = RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsProjectEditV1(@PathVariable("id") Integer appId, TBobofaceAdsProjectVo adsProjectVo) throws CustomException{
-		Map<String, Object> data = new HashMap<String, Object>();
-		
 		TBobofaceAdsProject adsProject = iAdsProjectService.getById(appId);
 		if(adsProject == null)
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数，无法找到appId:" + appId + "的项目");
 		
 		if(!adsProject.getStoragepath().equals(adsProjectVo.getAdsProject().getStoragepath())){//如果存储路径非原本的，去查询是否已存在路径
 			boolean isExist = iAdsProjectService.findProjectStoragepathIsExist(adsProjectVo.getAdsProject().getStoragepath());
 			if(isExist)
-				return new PubRetrunMsg(CODE._200100, null);
+				return new PubRetrunMsg(CODE.D200200);
 		}
 		
 		adsProject.setAppname(adsProjectVo.getAdsProject().getAppname());
@@ -216,57 +212,63 @@ public class AdsController extends BaseController {
 		adsProject.setServicetreeid(adsProjectVo.getAdsProject().getServicetreeid());
 		adsProject.setStoragepath(adsProjectVo.getAdsProject().getStoragepath());
 		iAdsProjectService.updateSeletive(adsProject);
-		data.put("msg", "ads项目配置修改成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000);
+	}
+	
+	/**
+	 * ads项目删除
+	 * @param ids 项目ids
+	 * @return PubRetrunMsg
+	 * @throws CustomException 
+	 */
+	@RequestMapping(value = "/json/v1/ads/projectDelete", method = RequestMethod.POST)
+	public @ResponseBody PubRetrunMsg adsProjectDeleteV1(@RequestParam("ids[]") Integer[] ids) throws CustomException{
+		if(ids == null)
+			return new PubRetrunMsg(CODE.D200001, "参数错误,ids不允许为空");
+		iAdsProjectService.deleteByIds(ids);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
 	 * ads 项目模板添加
+	 * @param appId 项目id
 	 * @return
 	 */
 	@RequestMapping(value = "/json/v1/ads/projectTemplateAdd/{id}", method = RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsProjectTemplateAddV1(@PathVariable("id") Integer appId){
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
 	 * ads 项目模板保存
 	 * @param tBobofaceAdsContentVo
-	 * @return
+	 * @return PubRetrunMsg
 	 */
 	@RequestMapping(value = "/json/v1/ads/projectTemplate/save", method = RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsProjectTemplateSaveV1(TBobofaceAdsContentVo tBobofaceAdsContentVo){
-		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceAdsContent adsTemplate = iAdsContentService.getById(tBobofaceAdsContentVo.getAdsTemplate().getId());
 		if(adsTemplate == null){
-			data.put("msg", "找不到所修改配置文件，如正常操作出现的问题，请联系研发人员，保存失败");
-			logger.error("找不到所修改配置文件，如正常操作出现的问题，请联系研发人员");
-			return new PubRetrunMsg(CODE._200000, data);
+			return new PubRetrunMsg(CODE.D200002,"非法参数,无法找到templateId:" + tBobofaceAdsContentVo.getAdsTemplate().getId() + "模板文件的数据");
 		}
 		adsTemplate.setContent(tBobofaceAdsContentVo.getAdsTemplate().getContent());
 		iAdsContentService.updateSeletive(adsTemplate);
-		data.put("msg", "模板文件保存成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
 	 * ads 项目工具脚本文件保存
 	 * @param adsUnitilscriptVo
-	 * @return
+	 * @return PubRetrunMsg
 	 */
 	@RequestMapping(value = "/json/v1/ads/unitlScript/save", method = RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsUnitlScriptSaveV1(TBobofaceAdsUnitilscriptVo adsUnitilscriptVo){
-		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceAdsUntilscript adsUntilscript =iAdsUnitlScriptService.getById(adsUnitilscriptVo.getAdsUntilscript().getId());
 		if(adsUntilscript == null){
-			data.put("msg", "找不到所修改工具脚本文件，如正常操作出现的问题，请联系研发人员，保存失败");
-			logger.error("找不到所修改工具脚本文件，如正常操作出现的问题，请联系研发人员");
-			return new PubRetrunMsg(CODE._200000, data);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到untilscriptId:" + adsUnitilscriptVo.getAdsUntilscript().getId() + "脚本文件的数据");
 		}
 		adsUntilscript.setContent(adsUnitilscriptVo.getAdsUntilscript().getContent());
 		iAdsUnitlScriptService.updateSeletive(adsUntilscript);
-		data.put("msg", "工具脚本文件保存成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
@@ -278,12 +280,11 @@ public class AdsController extends BaseController {
 	public @ResponseBody PubRetrunMsg adsProjectV1(@PathVariable("id") Integer appId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		if(appId == null){
-			logger.info("参数错误（appId：" + appId + "）");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,appId不允许为空");
 		}
 		TBobofaceAdsProject tBobofaceAdsProject = iAdsProjectService.getById(appId);
 		data.put("adsProject", tBobofaceAdsProject);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -304,7 +305,7 @@ public class AdsController extends BaseController {
 		data.put("list", pageInfoCustom.getRecordList());
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -317,9 +318,7 @@ public class AdsController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceAdsProject adsProject = iAdsProjectService.getById(tBobofaceAdsProjectBuildVo.getAppId());
 		if(adsProject == null){
-			logger.info("参数错误,不存在发布项目");
-			data.put("msg", "不存在发布项目");
-			return new PubRetrunMsg(CODE._200001, data);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到appId:" + tBobofaceAdsProjectBuildVo.getAppId() + "的项目");
 		}
 		//项目部署
 		ProjectBuild projectBuild = new OrdinaryProject();
@@ -341,6 +340,6 @@ public class AdsController extends BaseController {
 				adsUnitlScripts);//工具脚本
 		String buildResult = projectBuild.prepareProjectBuildTemplage(projectBuildVo);
 		data.put("buildResult", buildResult);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 }

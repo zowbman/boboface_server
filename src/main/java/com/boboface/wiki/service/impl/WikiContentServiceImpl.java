@@ -1,5 +1,6 @@
 package com.boboface.wiki.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,13 +28,15 @@ public class WikiContentServiceImpl extends BaseServiceImpl<TBobofaceWikiContent
 
 	@Override
 	public List<TBobofaceWikiContent> getByWikiTreeId(Integer wikiTreeId) {
+		List<TBobofaceWikiContent> wikiContents = new ArrayList<TBobofaceWikiContent>();
 		if(wikiTreeId == null){
 			logger.error("wikiTreeId 不允许为null");
-			return null;
+			return wikiContents;
 		}
 		Example example = new Example(TBobofaceWikiContent.class);
 		example.createCriteria().andEqualTo("wikitreeid", wikiTreeId);
-		return tBobofaceWikiContentMapper.selectByExample(example);
+		wikiContents = tBobofaceWikiContentMapper.selectByExample(example);
+		return wikiContents;
 	}
 
 	@Override

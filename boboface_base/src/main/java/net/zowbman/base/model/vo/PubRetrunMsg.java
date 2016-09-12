@@ -2,6 +2,8 @@ package net.zowbman.base.model.vo;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.zowbman.base.helper.CodeHelper;
 import net.zowbman.base.helper.CodeHelper.CODE;
 import net.zowbman.base.util.BaseUtil;
@@ -17,12 +19,31 @@ import net.zowbman.base.util.BaseUtil;
 public class PubRetrunMsg {
 	private int code;
 	private String msg;
+	@JsonIgnore
+	private String logMsg;//日志信息，不给用户看到的
 	private long times;
 	private Object data;
 	
 	public PubRetrunMsg() {
 		super();
 	}
+	
+	/**
+	 * 
+	 * @param code 状态码
+	 */
+	public PubRetrunMsg(CODE code){
+		Map<Integer, String> map = CodeHelper.code(code);
+		this.code = map.keySet().iterator().next();
+		this.msg = map.values().iterator().next();
+		this.times = BaseUtil.currentTimeMillis();
+	}
+	
+	/**
+	 * 
+	 * @param code 状态码
+	 * @param data 数据
+	 */
 	public PubRetrunMsg(CODE code, Object data) {
 		Map<Integer, String> map = CodeHelper.code(code);
 		this.code = map.keySet().iterator().next();
@@ -30,6 +51,35 @@ public class PubRetrunMsg {
 		this.times = BaseUtil.currentTimeMillis();
 		this.data = data;
 	}
+	
+	/**
+	 * 
+	 * @param code 状态码
+	 * @param logMsg 日志错误信息
+	 */
+	public PubRetrunMsg(CODE code, String logMsg){
+		Map<Integer, String> map = CodeHelper.code(code);
+		this.code = map.keySet().iterator().next();
+		this.msg =  map.values().iterator().next();
+		this.logMsg = logMsg;
+		this.times = BaseUtil.currentTimeMillis();
+	}
+	
+	/**
+	 * 
+	 * @param code 状态码
+	 * @param logMsg 日志错误信息
+	 * @param data 数据
+	 */
+	public PubRetrunMsg(CODE code, String logMsg, Object data){
+		Map<Integer, String> map = CodeHelper.code(code);
+		this.code = map.keySet().iterator().next();
+		this.msg = map.values().iterator().next();
+		this.logMsg = logMsg;
+		this.times = BaseUtil.currentTimeMillis();
+		this.data = data;
+	}
+	
 	public int getCode() {
 		return code;
 	}
@@ -41,6 +91,12 @@ public class PubRetrunMsg {
 	}
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+	public String getLogMsg() {
+		return logMsg;
+	}
+	public void setLogMsg(String logMsg) {
+		this.logMsg = logMsg;
 	}
 	public long getTimes() {
 		return times;

@@ -75,8 +75,10 @@ public class WikiController extends BaseController {
 	public @ResponseBody PubRetrunMsg wikiContentV1(@PathVariable("id") Integer wikiTreeId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<TBobofaceWikiContent> tBobofaceWikiContents = iWikiContentService.getByWikiTreeId(wikiTreeId);
-		if(tBobofaceWikiContents != null && tBobofaceWikiContents.size() > 1){
-			logger.info("根据wikiTreeId:"+ wikiTreeId +"查询数据集大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
+		if(tBobofaceWikiContents != null && tBobofaceWikiContents.size() > 0){
+			if(tBobofaceWikiContents.size() > 1){
+				logger.info("根据wikiTreeId:"+ wikiTreeId +"查询数据集大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
+			}
 			data.put("wikiConten", tBobofaceWikiContents.iterator().next());
 		}else{
 			data.put("wikiConten", null);

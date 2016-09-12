@@ -51,11 +51,11 @@ public class WikiController extends BaseController {
 	 */
 	@RequestMapping("/json/v1/wiki/test")
 	public @ResponseBody PubRetrunMsg test(){
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
-	 * wiki tree listData
+	 * wiki 树数据
 	 * @return PubRetrunMsg
 	 */
 	@RequestMapping("/json/v1/wiki/treeList")
@@ -63,22 +63,24 @@ public class WikiController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<TBobofaceWikiTree> tBobofaceWikiTrees = iWikiTreeService.findAll();
 		data.put("list", tBobofaceWikiTrees);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
-	 * wiki content data
-	 * @param wikiTreeId
+	 * wiki 内容
+	 * @param wikiTreeId 树id
 	 * @return PubRetrunMsg
 	 */
 	@RequestMapping("/json/v1/wiki/content/{id}")
 	public @ResponseBody PubRetrunMsg wikiContentV1(@PathVariable("id") Integer wikiTreeId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<TBobofaceWikiContent> tBobofaceWikiContents = iWikiContentService.getByWikiTreeId(wikiTreeId);
-		if(tBobofaceWikiContents == null || tBobofaceWikiContents.size() != 1)
-			logger.info("根据wikiTreeId:"+ wikiTreeId +"查询数据集等于0或大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
-		data.put("wikiConten", tBobofaceWikiContents == null || tBobofaceWikiContents.size() != 1 ? null : tBobofaceWikiContents.iterator().next());
-		return new PubRetrunMsg(CODE._100000, data);
+		if(tBobofaceWikiContents.size() > 1){
+			logger.info("根据wikiTreeId:"+ wikiTreeId +"查询数据集大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
+		}else{
+			data.put("wikiConten", null);
+		}
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	
@@ -91,50 +93,44 @@ public class WikiController extends BaseController {
 	@RequestMapping("/json/v1/wiki/tree/rename/{id}/{newName}")
 	public @ResponseBody PubRetrunMsg wikiTreeRenameV1(@PathVariable("id") Integer wikiTreeId, @PathVariable("newName") String newName){
 		if(newName == null || wikiTreeId == null){
-			logger.info("参数错误（newName：" + newName + ",wikiTreeId" + wikiTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,newName和wikiTreeId不允许为空");
 		}
 		TBobofaceWikiTree tBobofaceWikiTree = iWikiTreeService.getById(wikiTreeId);
 		if(tBobofaceWikiTree == null){
-			logger.info("非法参数，无法找wikiTreeId：" + wikiTreeId + "的数据");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到wikiTreeId:" + wikiTreeId + "的数据");
 		}
 		if(tBobofaceWikiTree.getAllowedit() == (byte)0){//不允许修改
-			logger.info("非法请求，wikiTree：" + tBobofaceWikiTree.getTitle() + "不允许进行重命名操作");
-			return new PubRetrunMsg(CODE._200002, null);
+			return new PubRetrunMsg(CODE.D200100, "非法请求，wikiTree：" + tBobofaceWikiTree.getTitle() + "不允许进行重命名操作");
 		}
 		tBobofaceWikiTree.setTitle(newName);
 		iWikiTreeService.updateSeletive(tBobofaceWikiTree);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
-	 * wiki tree remove 删除
+	 * wiki 树删除
 	 * @param id 资源Id
 	 * @return PubRetrunMsg
 	 */
 	@RequestMapping("/json/v1/wiki/tree/remove/{id}")
 	public @ResponseBody PubRetrunMsg wikiTreeRemoveV1(@PathVariable("id") Integer wikiTreeId){
 		if(wikiTreeId == null){
-			logger.info("参数错误（id：" + wikiTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,wikiTreeId不允许为空");
 		}
 		TBobofaceWikiTree tBobofaceWikiTree = iWikiTreeService.getById(wikiTreeId);
 		if(tBobofaceWikiTree == null){
-			logger.info("非法参数，无法找wikiTreeId：" + wikiTreeId + "的数据");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到wikiTreeId:" + wikiTreeId + "的数据");
 		}
 		if(tBobofaceWikiTree.getAllowdelete() == (byte)0){//不允许删除
-			logger.info("非法请求，wikiTree：" + tBobofaceWikiTree.getTitle() + "不允许删除节点操作");
-			return new PubRetrunMsg(CODE._200004, null);
+			return new PubRetrunMsg(CODE.D200101, "非法请求,wikiTree:" + tBobofaceWikiTree.getTitle() + "不允许删除节点操作");
 		}
 		iWikiContentService.deleteByWikiTreeId(wikiTreeId);
 		iWikiTreeService.delete(wikiTreeId);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
-	 * wiki tree add 添加
+	 * wiki 树节点添加
 	 * @param parenId 父节点
 	 * @return PubRetrunMsg
 	 */
@@ -142,17 +138,14 @@ public class WikiController extends BaseController {
 	public @ResponseBody PubRetrunMsg wikiTreeAddV1(@PathVariable("parenId") Integer parenId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		if(parenId == null){
-			logger.info("参数错误（parenId：" + parenId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,parenId不允许为空");
 		}
 		TBobofaceWikiTree tBobofaceWikiTree = iWikiTreeService.getById(parenId);
 		if(tBobofaceWikiTree == null){
-			logger.info("非法参数，无法找wikiTreeId：" + parenId + "的数据");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找wikiTreeId:" + parenId + "的数据");
 		}
 		if(tBobofaceWikiTree.getAllowadd() == (byte)0){//不允许修改
-			logger.info("非法请求，wikiTree：" + tBobofaceWikiTree.getTitle() + "不允许添加子级节点操作");
-			return new PubRetrunMsg(CODE._200003, null);
+			return new PubRetrunMsg(CODE.D200102, "非法请求,wikiTree:" + tBobofaceWikiTree.getTitle() + "不允许添加子级节点操作");
 		}
 		tBobofaceWikiTree = new TBobofaceWikiTree();
 		tBobofaceWikiTree.setTitle("new node");
@@ -164,11 +157,11 @@ public class WikiController extends BaseController {
 		tBobofaceWikiTree.setTitle(tBobofaceWikiTree.getTitle() + "_" + tBobofaceWikiTree.getId());
 		iWikiTreeService.updateSeletive(tBobofaceWikiTree);
 		data.put("wikiTree", tBobofaceWikiTree);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
-	 * wiki tree 根据id查询wikiTree 节点
+	 * 根据id查询wiki树节点
 	 * @param wikiTreeId
 	 * @return PubRetrunMsg
 	 */
@@ -176,16 +169,15 @@ public class WikiController extends BaseController {
 	public @ResponseBody PubRetrunMsg wikiTreeV1(@PathVariable("id") Integer wikiTreeId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		if(wikiTreeId == null){
-			logger.info("参数错误（wikiTreeId" + wikiTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,wikiTreeId不允许为空");
 		}
 		TBobofaceWikiTree tBobofaceWikiTree = iWikiTreeService.getById(wikiTreeId);
 		data.put("wikiTree", tBobofaceWikiTree);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
-	 * wiki tree 修改权限
+	 * wiki树 修改权限
 	 * @param tBobofaceWikiTreeVo 包装类
 	 * @return PubRetrunMsg
 	 */
@@ -196,13 +188,13 @@ public class WikiController extends BaseController {
 		tBobofaceWikiTree.setAllowedit(tBobofaceWikiTreeVo.getWikiTree().getAllowedit());
 		tBobofaceWikiTree.setAllowdelete(tBobofaceWikiTreeVo.getWikiTree().getAllowdelete());
 		iWikiTreeService.updateSeletive(tBobofaceWikiTree);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
-	 * wiki tree by page
+	 * wiki树列表（非页）
 	 * @param pageNum 页码
-	 * @param pageSize 一页数据量
+	 * @param pageSize 当前页数量
 	 * @param request 
 	 * @return PubRetrunMsg
 	 * @throws CustomException
@@ -218,20 +210,20 @@ public class WikiController extends BaseController {
 		data.put("list", tBobofaceWikiTrees);
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
-	 * wiki content 保存
+	 * wiki内容 保存
 	 * @param tBobofaceWikiContentVo
-	 * @return
+	 * @return PubRetrunMsg
 	 */
 	@RequestMapping(value = "/json/v1/wiki/content/save", method=RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg wikiContentSaveV1(TBobofaceWikiContentVo tBobofaceWikiContentVo){
 		Map<String, Object> data = new HashMap<String, Object>();
 		List<TBobofaceWikiContent> tBobofaceWikiContents = iWikiContentService.getByWikiTreeId(tBobofaceWikiContentVo.getWikiContent().getWikitreeid());
-		if(tBobofaceWikiContents == null || tBobofaceWikiContents.size() != 1)
-			logger.info("根据wikiTreeId:"+ tBobofaceWikiContentVo.getWikiContent().getId() +"查询数据集等于0或大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
+		if(tBobofaceWikiContents.size() > 1)
+			logger.info("根据wikiTreeId:"+ tBobofaceWikiContentVo.getWikiContent().getId() +"查询数据集大于1条,总共:"+ tBobofaceWikiContents.size() +"条");
 		TBobofaceWikiContent tBobofaceWikiContent = tBobofaceWikiContents == null || tBobofaceWikiContents.size() != 1 ? null : tBobofaceWikiContents.iterator().next();
 		if(tBobofaceWikiContent == null){//新增
 			tBobofaceWikiContent = new TBobofaceWikiContent();
@@ -243,7 +235,6 @@ public class WikiController extends BaseController {
 			tBobofaceWikiContent.setContent(tBobofaceWikiContentVo.getWikiContent().getContent());
 			iWikiContentService.updateSeletive(tBobofaceWikiContent);
 		}
-		data.put("msg", "保存成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 }

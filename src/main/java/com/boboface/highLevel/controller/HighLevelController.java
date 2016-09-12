@@ -39,7 +39,7 @@ public class HighLevelController extends BaseController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		Integer status = HighLevelStatus.getStatus(request, response);
 		data.put("status", status);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -55,25 +55,19 @@ public class HighLevelController extends BaseController {
 	public @ResponseBody PubRetrunMsg highLevelInV1(HttpSession httpSession, @CookieValue(value = "JSESSIONID", defaultValue = "") String sessionId,
 			HttpServletResponse resp, String cmd) throws CustomException{
 		Map<String, Object> data = new HashMap<String, Object>();
-		int status = 0;
-		String msg = "密钥错误，启用高权状态失败";
 		if(cmd == null){
-			logger.error("参数cmd为空");
-			throw new CustomException("参数错误");
+			return new PubRetrunMsg(CODE.D200001, "参数错误,cmd不允许为空");
 		}
 		if("whosyourdaddy".equals(cmd)){
-			status = 1;
-			msg = "启用高权状态成功,3秒后重置页面";
-			httpSession.setAttribute("whosyourdaddy", status);
+			data.put("status", 1);
+			httpSession.setAttribute("whosyourdaddy", 1);
 			WebUtil.addCookie(resp, "whosyourdaddyId", sessionId, 30 * 60);
+			return new PubRetrunMsg(CODE.D200400, data);
 		}else if("quit".equals(cmd)){
-			msg = "退出高权状态成功,3秒后重置页面";
 			httpSession.removeAttribute("whosyourdaddy");
+			return new PubRetrunMsg(CODE.D200401, data);
 		}else{//高权密钥错误
-			return new PubRetrunMsg(CODE._200005, null);
+			return new PubRetrunMsg(CODE.D200402, data);
 		}
-		data.put("status", status);
-		data.put("msg", msg);
-		return new PubRetrunMsg(CODE._100000, data);
 	}
 }

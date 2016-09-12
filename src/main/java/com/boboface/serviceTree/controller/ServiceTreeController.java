@@ -44,7 +44,7 @@ public class ServiceTreeController extends BaseController {
 	private static Logger logger = LoggerFactory.getLogger(AdsController.class);
 	
 	/**
-	 * ads tree listData
+	 * ads 树数据
 	 * @return PubRetrunMsg
 	 * @throws CustomException 
 	 */
@@ -68,7 +68,7 @@ public class ServiceTreeController extends BaseController {
 			newServiceTrees.add(serviceTree);
 		}
 		data.put("list", tBobofaceServiceTrees);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -81,8 +81,7 @@ public class ServiceTreeController extends BaseController {
 	public @ResponseBody PubRetrunMsg parentServiceTreeV1(@PathVariable("serviceTreeType") String serviceTreeType) throws CustomException{
 		Map<String, Object> data = new HashMap<String, Object>();
 		if(!BaseUtil.isHave(serviceTreeType, "second","third")){
-			logger.error("参数错误");
-			return new PubRetrunMsg(CODE._200001, null); 
+			return new PubRetrunMsg(CODE.D200001, "参数错误,参数:" + serviceTreeType + ",非second或third"); 
 		}
 		TBobofaceServiceTree rootServiceTree = null;
 		List<TBobofaceServiceTree> childrenServiceTrees = new ArrayList<TBobofaceServiceTree>();
@@ -100,7 +99,7 @@ public class ServiceTreeController extends BaseController {
 		}
 		data.put("rootServiceTree", rootServiceTree);
 		data.put("childrenServiceTrees", childrenServiceTrees);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -120,8 +119,7 @@ public class ServiceTreeController extends BaseController {
 		tBobofaceServiceTree.setAllowedit((byte)1);//允许编辑
 		tBobofaceServiceTree.setAllowdelete((byte)1);//允许删除
 		iServiceTreeService.saveSeletive(tBobofaceServiceTree);
-		data.put("msg", "业务树保存成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -143,11 +141,11 @@ public class ServiceTreeController extends BaseController {
 		data.put("list", tBobofaceServiceTrees);
 		data.put("pageInfo", pageInfoCustom);
 		data.put("pageUrl", PageHelper.pageUrl(request));
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
-	 * sts tree 根据id查询serviceTree 节点
+	 * 业务树 根据id查询serviceTree 节点
 	 * @param wikiTreeId
 	 * @return PubRetrunMsg
 	 */
@@ -155,12 +153,11 @@ public class ServiceTreeController extends BaseController {
 	public @ResponseBody PubRetrunMsg serviceTreeV1(@PathVariable("id") Integer serviceTreeId){
 		Map<String, Object> data = new HashMap<String, Object>();
 		if(serviceTreeId == null){
-			logger.info("参数错误（serviceTreeId" + serviceTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,serviceTreeId不允许为空");
 		}
 		TBobofaceServiceTree tBobofaceServiceTree = iServiceTreeService.getById(serviceTreeId);
 		data.put("serviceTree", tBobofaceServiceTree);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -175,31 +172,36 @@ public class ServiceTreeController extends BaseController {
 		tBobofaceServiceTree.setAllowedit(tBobofaceServiceTreeVo.getServiceTree().getAllowedit());
 		tBobofaceServiceTree.setAllowdelete(tBobofaceServiceTreeVo.getServiceTree().getAllowdelete());
 		iServiceTreeService.updateSeletive(tBobofaceServiceTree);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
-	 * sts tree remove 删除
-	 * @param id 资源Id
+	 * sts业务树删除
+	 * @param serviceTreeId 业务树id
 	 * @return PubRetrunMsg
+	 * @throws CustomException 
 	 */
 	@RequestMapping("/json/v1/serviceTree/remove/{id}")
-	public @ResponseBody PubRetrunMsg serviceTreeRemoveV1(@PathVariable("id") Integer serviceTreeId){
+	public @ResponseBody PubRetrunMsg serviceTreeRemoveV1(@PathVariable("id") Integer serviceTreeId) throws CustomException{
 		if(serviceTreeId == null){
-			logger.info("参数错误（id：" + serviceTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001,"参数错误,serviceTreeId不允许为null");
 		}
+		//查询业务树所挂载项目
+		List<TBobofaceAdsProject> adsProjects = iAdsProjectService.findProjectListByServiceTreeId(serviceTreeId);
+		if(adsProjects == null || adsProjects.size() == 0){
+			return new PubRetrunMsg(CODE.D200300);
+		}
+		//查询业务树所挂载服务器
+		
 		TBobofaceServiceTree tBobofaceServiceTree = iServiceTreeService.getById(serviceTreeId);
 		if(tBobofaceServiceTree == null){
-			logger.info("非法参数，无法找serviceTreeId：" + serviceTreeId + "的数据");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找serviceTreeId:" + serviceTreeId + "的数据");
 		}
 		if(tBobofaceServiceTree.getAllowdelete() == (byte)0){//不允许删除
-			logger.info("非法请求，wikiTree：" + tBobofaceServiceTree.getTitle() + "不允许删除节点操作");
-			return new PubRetrunMsg(CODE._200004, null);
+			return new PubRetrunMsg(CODE.D200301);
 		}
 		iServiceTreeService.delete(serviceTreeId);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
@@ -211,21 +213,18 @@ public class ServiceTreeController extends BaseController {
 	@RequestMapping("/json/v1/serviceTree/rename/{id}/{newName}")
 	public @ResponseBody PubRetrunMsg servicesTreeRenameV1(@PathVariable("id") Integer serviceTreeId, @PathVariable("newName") String newName){
 		if(newName == null || serviceTreeId == null){
-			logger.info("参数错误（newName：" + newName + ",serviceTreeId" + serviceTreeId);
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200001, "参数错误,newName和serviceTreeId不允许为空");
 		}
 		TBobofaceServiceTree tBobofaceServiceTree = iServiceTreeService.getById(serviceTreeId);
 		if(tBobofaceServiceTree == null){
-			logger.info("非法参数，无法找serviceTreeId：" + serviceTreeId + "的数据");
-			return new PubRetrunMsg(CODE._200001, null);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到serviceTreeId:" + serviceTreeId + "的节点数据");
 		}
 		if(tBobofaceServiceTree.getAllowedit() == (byte)0){//不允许修改
-			logger.info("非法请求，serviceTree：" + tBobofaceServiceTree.getTitle() + "不允许进行重命名操作");
-			return new PubRetrunMsg(CODE._200002, null);
+			return new PubRetrunMsg(CODE.D200302);
 		}
 		tBobofaceServiceTree.setTitle(newName);
 		iServiceTreeService.updateSeletive(tBobofaceServiceTree);
-		return new PubRetrunMsg(CODE._100000, null);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 	
 	/**
@@ -242,7 +241,7 @@ public class ServiceTreeController extends BaseController {
 		int maxDepth = getMaxDepth(rootServiceTree);
 		data.put("maxDepth", maxDepth);
 		data.put("rootServiceTree", rootServiceTree.iterator().next());
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -270,7 +269,6 @@ public class ServiceTreeController extends BaseController {
 	 */
 	@RequestMapping(value = "/json/v1/serviceTree/adsMountProject/add", method=RequestMethod.POST)
 	public @ResponseBody PubRetrunMsg adsMountProjectAddV1(TBobofaceAdsProjectVo tBobofaceAdsProjectVo) throws CustomException{
-		Map<String, Object> data = new HashMap<String, Object>();
 		TBobofaceServiceTree serviceTree = iServiceTreeService.getById(tBobofaceAdsProjectVo.getAdsProject().getServicetreeid());
 		if(serviceTree == null){
 			throw new CustomException("不存在被挂载业务树，刷新重试");
@@ -297,8 +295,7 @@ public class ServiceTreeController extends BaseController {
 			for (TBobofaceAdsUntilscript tBobofaceAdsUntilscript : tBobofaceAdsUntilscripts) {
 				iAdsUnitlScriptService.saveSeletive(tBobofaceAdsUntilscript);
 			}
-			data.put("msg", adsProject.getAppname() + "项目挂载成功");
 		}
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000);
 	}
 }

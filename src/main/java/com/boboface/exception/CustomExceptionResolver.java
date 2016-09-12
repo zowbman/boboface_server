@@ -70,7 +70,7 @@ public class CustomExceptionResolver extends ExceptionHandlerExceptionResolver i
 		response.setCharacterEncoding("UTF-8");
 	    response.setHeader("Cache-Control","no-cache, must-revalidate");
 	    try {
-	    	response.getWriter().write(objectMapper.writeValueAsString(new PubRetrunMsg(CODE._300000, null)));
+	    	response.getWriter().write(objectMapper.writeValueAsString(new PubRetrunMsg(CODE.D300000, null)));
 		} catch (IOException e) {
 			logger.error("IOException catch:" ,e);
 		}

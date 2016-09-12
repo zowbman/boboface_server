@@ -77,7 +77,7 @@ public class ServerController extends BaseController {
 			listMap.add(map);
 		}
 		data.put("list", listMap);
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
 	/**
@@ -92,9 +92,7 @@ public class ServerController extends BaseController {
 		
 		TBobofaceServiceTree serverTree = iServiceTreeService.getById(serverTreeId);
 		if(serverTree == null){
-			logger.error("查询业务树对象为空，传入serverTreeId参数为：" + serverTreeId);
-			data.put("msg", "无法找到挂载业务树，请刷新重试");
-			return new PubRetrunMsg(CODE._200001, data);
+			return new PubRetrunMsg(CODE.D200002, "非法参数,无法找到serverTreeId:" + serverTreeId + "的数据");
 		}
 	
 		List<String> listIps = (ips == null ? new ArrayList<String>() : Arrays.asList(ips));//无挂载服务器ip
@@ -134,7 +132,6 @@ public class ServerController extends BaseController {
 		List<String> deleteArry = (List<String>) map.get("delete_arry");
 		iAdsServerService.deleteServerMount(deleteArry, serverTree.getId());
 		
-		data.put("msg", "服务器挂载配置修改成功");
-		return new PubRetrunMsg(CODE._100000, data);
+		return new PubRetrunMsg(CODE.D100000, data);
 	}
 }

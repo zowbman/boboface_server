@@ -216,6 +216,20 @@ public class AdsController extends BaseController {
 	}
 	
 	/**
+	 * ads项目删除
+	 * @param ids 项目ids
+	 * @return PubRetrunMsg
+	 * @throws CustomException 
+	 */
+	@RequestMapping(value = "/json/v1/ads/projectDelete", method = RequestMethod.POST)
+	public @ResponseBody PubRetrunMsg adsProjectDeleteV1(@RequestParam("ids[]") Integer[] ids) throws CustomException{
+		if(ids == null)
+			return new PubRetrunMsg(CODE.D200001, "参数错误,ids不允许为空");
+		iAdsProjectService.deleteByIds(ids);
+		return new PubRetrunMsg(CODE.D100000);
+	}
+	
+	/**
 	 * ads 项目模板添加
 	 * @param appId 项目id
 	 * @return

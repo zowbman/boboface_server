@@ -42,4 +42,10 @@ public interface IAdsProjectService extends IBaseService<TBobofaceAdsProject> {
 	 * @return boolean
 	 */
 	boolean findProjectStoragepathIsExist(String storagepath) throws CustomException;
+	
+	/**
+	 * 根据ids删除ads项目
+	 * @param ids
+	 */
+	void deleteByIds(Integer[] ids) throws CustomException;
 }

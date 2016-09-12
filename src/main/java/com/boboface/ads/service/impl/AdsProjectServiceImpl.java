@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.boboface.ads.mapper.TBobofaceAdsProjectMapper;
+import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
+import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
 import com.boboface.ads.service.IAdsProjectService;
 import com.boboface.base.service.impl.BaseServiceImpl;
 import com.boboface.exception.CustomException;
@@ -69,5 +72,20 @@ public class AdsProjectServiceImpl extends BaseServiceImpl<TBobofaceAdsProject> 
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void deleteByIds(Integer[] ids) throws CustomException {
+		if(ids == null)
+			throw new CustomException("ids不允许为空");
+		for (Integer id : ids) {
+			Example adsContentExample =  new Example(TBobofaceAdsContent.class);
+			adsContentExample.createCriteria().andEqualTo("appid", id);
+			tBobofaceAdsContentMapper.deleteByExample(adsContentExample);//项目模板
+			Example adsUntilscriptExample = new Example(TBobofaceAdsUntilscript.class);
+			adsUntilscriptExample.createCriteria().andEqualTo("appid", id);
+			tBobofaceAdsUntilscriptMapper.deleteByExample(adsUntilscriptExample);//项目脚本文件
+			tBobofaceAdsProjectMapper.deleteByPrimaryKey(id);//项目删除
+		}
 	}
 }

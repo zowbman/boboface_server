@@ -33,6 +33,7 @@ public class AdsUnitl {
 			TBobofaceAdsContent tBobofaceAdsContent = new TBobofaceAdsContent();
 			tBobofaceAdsContent.setTitle(templates[i]);
 			tBobofaceAdsContent.setAppid(appId);
+			tBobofaceAdsContent.setContent("");
 			tBobofaceAdsContent.setAddtime((int)BaseUtil.currentTimeMillis());
 			tBobofaceAdsContents.add(tBobofaceAdsContent);
 		}

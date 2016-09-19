@@ -66,6 +66,14 @@ public class WikiController extends BaseController {
 		return new PubRetrunMsg(CODE.D100000, data);
 	}
 	
+	@RequestMapping("/json/v2/wiki/treeList")
+	public @ResponseBody PubRetrunMsg wikiTreeListV2(){
+		Map<String, Object> data = new HashMap<String, Object>();
+		List<TBobofaceWikiTree> tBobofaceWikiTrees = iWikiTreeService.findAllByOderBySort(OrderStyleEnum.ACS);
+		data.put("list", tBobofaceWikiTrees);
+		return new PubRetrunMsg(CODE.D100000, data);
+	}
+	
 	/**
 	 * wiki 内容
 	 * @param wikiTreeId 树id
@@ -150,12 +158,16 @@ public class WikiController extends BaseController {
 		if(tBobofaceWikiTree.getAllowadd() == (byte)0){//不允许修改
 			return new PubRetrunMsg(CODE.D200102, "非法请求,wikiTree:" + tBobofaceWikiTree.getTitle() + "不允许添加子级节点操作");
 		}
+		//获取排序最大值
+		Integer sort = iWikiTreeService.getMaxSortTreeNode();
+		
 		tBobofaceWikiTree = new TBobofaceWikiTree();
 		tBobofaceWikiTree.setTitle("new node");
 		tBobofaceWikiTree.setParentid(parenId);
 		tBobofaceWikiTree.setAddtime((int)BaseUtil.currentTimeMillis());
 		tBobofaceWikiTree.setAllowedit((byte)1);
 		tBobofaceWikiTree.setAllowdelete((byte)1);
+		tBobofaceWikiTree.setSort(++sort);
 		iWikiTreeService.saveSeletive(tBobofaceWikiTree);
 		tBobofaceWikiTree.setTitle(tBobofaceWikiTree.getTitle() + "_" + tBobofaceWikiTree.getId());
 		iWikiTreeService.updateSeletive(tBobofaceWikiTree);
@@ -238,6 +250,30 @@ public class WikiController extends BaseController {
 			tBobofaceWikiContent.setContent(tBobofaceWikiContentVo.getWikiContent().getContent());
 			iWikiContentService.updateSeletive(tBobofaceWikiContent);
 		}
+		return new PubRetrunMsg(CODE.D100000);
+	}
+	
+	/**
+	 * wiki树节点排序
+	 * @param nodeId 移动节点
+	 * @param targetNodeId 目标节点
+	 * @param type 移动类型
+	 * @return
+	 * @throws CustomException 
+	 */
+	@RequestMapping(value = "/json/v1/wiki/treeNodeSortChange/{type}", method = RequestMethod.POST)
+	public @ResponseBody PubRetrunMsg wikiTreeNodeSortChange(Integer nodeId,Integer targetNodeId, @PathVariable("type") String type) throws CustomException{
+		//"inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点
+		if(!BaseUtil.isHave(type, "inner","prev","next")){
+			return new PubRetrunMsg(CODE.D200001,"参数错误,参数type:" + type + ",非inner或prev或next");
+		}
+		
+		if(nodeId == null || targetNodeId == null){
+			return new PubRetrunMsg(CODE.D200001,"参数错误,参数nodeId,targetNodeId不允许为空");
+		}
+		
+		iWikiTreeService.updateWikiTreeNodeSort(nodeId, targetNodeId, type);
+		
 		return new PubRetrunMsg(CODE.D100000);
 	}
 }

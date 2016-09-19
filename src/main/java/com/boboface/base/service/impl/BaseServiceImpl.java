@@ -17,12 +17,13 @@ import com.boboface.ads.mapper.TBobofaceAdsProjectMapper;
 import com.boboface.ads.mapper.TBobofaceAdsServerMapper;
 import com.boboface.ads.mapper.TBobofaceAdsServerMapperCustom;
 import com.boboface.ads.mapper.TBobofaceAdsUntilscriptMapper;
-import com.boboface.ads.model.po.TBobofaceAdsServer;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
 import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapper;
 import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapperCustom;
 import com.boboface.wiki.mapper.TBobofaceWikiContentMapper;
+import com.boboface.wiki.mapper.TBobofaceWikiTreeMapper;
+import com.boboface.wiki.mapper.TBobofaceWikiTreeMapperCustom;
 import com.github.pagehelper.PageHelper;
 
 /**
@@ -51,6 +52,18 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Autowired
 	private Mapper<T> mapper;
+	
+	/**
+	 * wiki tree mapper接口
+	 */
+	@Autowired
+	protected TBobofaceWikiTreeMapper tBobofaceWikiTreeMapper;
+	
+	/**
+	 * wiki tree custom mapper 接口
+	 */
+	@Autowired
+	protected TBobofaceWikiTreeMapperCustom tBobofaceWikiTreeMapperCustom;
 	
 	/**
 	 * wiki content mapper接口

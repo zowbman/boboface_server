@@ -24,6 +24,7 @@ public class TBobofaceWikiTree {
     private Byte allowadd;
     private Byte allowdelete;
     private Byte allowedit;
+    private Integer sort;
     private Integer addtime;
     
     /**
@@ -81,8 +82,16 @@ public class TBobofaceWikiTree {
     public void setAllowedit(Byte allowedit) {
         this.allowedit = allowedit;
     }
-
-    public Integer getAddtime() {
+    
+	public Integer getSort() {
+		return sort;
+	}
+	
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
+	public Integer getAddtime() {
         return addtime;
     }
 

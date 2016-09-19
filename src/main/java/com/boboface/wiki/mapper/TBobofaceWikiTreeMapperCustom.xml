@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.boboface.wiki.mapper.TBobofaceWikiTreeMapper" >
+<mapper namespace="com.boboface.wiki.mapper.TBobofaceWikiTreeMapperCustom" >
   <resultMap id="BaseResultMap" type="com.boboface.wiki.model.po.TBobofaceWikiTree" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -11,4 +11,11 @@
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="addTime" property="addtime" jdbcType="INTEGER" />
   </resultMap>
+  
+  <select id="getMaxSortTreeNode" resultType="int">
+  	SELECT
+		max(sort)
+	FROM
+		t_boboface_wiki_tree
+  </select>
 </mapper>

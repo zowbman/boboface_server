@@ -2,8 +2,6 @@ package com.boboface.ads.service.impl;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.EnvEnum;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,7 @@ import tk.mybatis.mapper.entity.Example.Criteria;
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.vo.AdsProjectBuildContent;
 import com.boboface.ads.service.IAdsContentService;
+import com.boboface.base.model.vo.EnvEnum;
 import com.boboface.base.service.impl.BaseServiceImpl;
 
 /**

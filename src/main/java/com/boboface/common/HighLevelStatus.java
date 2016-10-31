@@ -4,8 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.zowbman.base.util.WebUtil;
-
+import com.boboface.base.util.WebUtil;
 import com.boboface.listener.SesstionListener;
 
 /**

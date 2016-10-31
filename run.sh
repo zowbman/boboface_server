@@ -32,8 +32,9 @@ PID_FILE=$WORK_DIR/pid
 #OPTS=" @JAVA_OPTS@ "
 #OPTS="-Dlog.dir=$LOG_DIR -Xms1024m -Xmx2048m -Xmn1600m"
 #OPTS="$OPTS -XX:+UseParallelOldGC -XX:-UseAdaptiveSizePolicy -XX:SurvivorRatio=8"
-OPTS=" -server -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -Xloggc:$LOG_DIR/gc.log"
+#OPTS=" -server -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -Xloggc:$LOG_DIR/gc.log"
 #OPTS="$OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8001 "
+OPTS=" -server -Xms256m -Xmx512m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -Xloggc:$LOG_DIR/gc.log -DCAT_HOME=$LOG_DIR"
 
 RETVAL=0
 

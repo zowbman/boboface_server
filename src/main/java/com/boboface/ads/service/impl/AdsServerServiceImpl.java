@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.zowbman.base.model.vo.PageBean;
-import net.zowbman.base.model.vo.PageInfoCustom;
-
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
@@ -15,6 +12,8 @@ import tk.mybatis.mapper.entity.Example;
 import com.boboface.ads.model.po.TBobofaceAdsServer;
 import com.boboface.ads.model.po.TBobofaceAdsServerCustom;
 import com.boboface.ads.service.IAdsServerService;
+import com.boboface.base.model.vo.PageBean;
+import com.boboface.base.model.vo.PageInfoCustom;
 import com.boboface.base.service.impl.BaseServiceImpl;
 import com.boboface.exception.CustomException;
 

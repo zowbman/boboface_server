@@ -2,8 +2,7 @@ package com.boboface.serviceTree.service;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.OrderStyleEnum;
-
+import com.boboface.base.model.vo.OrderStyleEnum;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
 import com.boboface.serviceTree.model.po.TBobofaceServiceTree;

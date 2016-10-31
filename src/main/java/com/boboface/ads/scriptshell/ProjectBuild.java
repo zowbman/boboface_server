@@ -10,15 +10,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import net.zowbman.base.data.type.conversion.string.IStringDataTypeConversion;
-import net.zowbman.base.data.type.conversion.string.impl.StringDataTypeConversionImpl;
-import net.zowbman.base.file.io.FileIoUntil;
-import net.zowbman.base.shell.ShellHandler;
-import net.zowbman.base.util.BaseUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.boboface.base.data.type.conversion.StringTypeConversion;
+import com.boboface.base.file.io.FileIoUntil;
+import com.boboface.base.shell.ShellHandler;
+import com.boboface.base.util.BaseUtil;
 
 /**
  * 
@@ -42,10 +41,6 @@ public abstract class ProjectBuild {
 	 */
 	private List<String> tempStrings = new ArrayList<String>();
 	
-	/**
-	 * 数据转换接口
-	 */
-	IStringDataTypeConversion iStringDataTypeConversion = new StringDataTypeConversionImpl();
 	
 	/**
 	 *  执行结果
@@ -119,7 +114,7 @@ public abstract class ProjectBuild {
 		tempAdsDefaultConf.set(6, tempAdsDefaultConf.get(6).replaceAll(regexStr, projectBuildVo.getOwnerGroup()));//ownerGroup
 		tempAdsDefaultConf.set(7, tempAdsDefaultConf.get(7).replaceAll(regexStr, ""));//lastVersion
 		tempAdsDefaultConf.set(8, tempAdsDefaultConf.get(8).replaceAll(regexStr, ""));//curVersion
-		FileIoUntil.writeFile("/__bobofaceAdsCompile__/adsTools/" + projectBuildVo.getAppId() + "/ads.default.conf", iStringDataTypeConversion.listStrToString(tempAdsDefaultConf, "\n"));
+		FileIoUntil.writeFile("/__bobofaceAdsCompile__/adsTools/" + projectBuildVo.getAppId() + "/ads.default.conf", StringTypeConversion.listStrToString(tempAdsDefaultConf, "\n"));
 	}
 	
 	/**
@@ -266,7 +261,7 @@ public abstract class ProjectBuild {
 	 */
 	private void runShell(){
 		
-		shellScripts.add(iStringDataTypeConversion.listStrToString(tempStrings, " && "));
+		shellScripts.add(StringTypeConversion.listStrToString(tempStrings, " && "));
 		
 		String[] strings = new String[shellScripts.size()];
 		for(int i = 0;i < shellScripts.size(); i++){

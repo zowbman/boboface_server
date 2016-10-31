@@ -2,9 +2,8 @@ package com.boboface.base.service;
 
 import java.util.List;
 
+import com.boboface.base.model.vo.PageBean;
 import com.boboface.exception.CustomException;
-
-import net.zowbman.base.model.vo.PageBean;
 
 /**
  * 

@@ -3,8 +3,8 @@ package com.boboface.ads.model.po;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.zowbman.base.file.io.FileIoUntil;
-import net.zowbman.base.util.BaseUtil;
+import com.boboface.base.file.io.FileIoUntil;
+import com.boboface.base.util.BaseUtil;
 
 /**
  * 

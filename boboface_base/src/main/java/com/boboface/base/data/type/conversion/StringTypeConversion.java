@@ -85,7 +85,7 @@ public class StringTypeConversion {
 		StringBuilder result = new StringBuilder();
 		boolean flag = false;
 		for (T t : list) {
-			if(!BaseUtil.isWrapClass(t.getClass())){
+			if(!BaseUtil.isWrapClass(t.getClass()) && !(t instanceof String)){
 				logger.error("非基本类型集合");
 				return null;
 			}
@@ -101,15 +101,15 @@ public class StringTypeConversion {
 	
 	/**
 	 * List<T> -> List<String>(List<T>转List<String>，参数非对象List)
-	 * @param listLong 长整型List
+	 * @param list<T>
 	 * @return List<String>
 	 */
-	public static <T> List<String> listStringToListLong(List<T> list) {
+	public static <T> List<String> listToListString(List<T> list) {
 		if(list == null)
 			return null;
 		List<String> strings = new ArrayList<String>();
 		for (T t : list) {
-			if(!BaseUtil.isWrapClass(t.getClass())){
+			if(!BaseUtil.isWrapClass(t.getClass()) && !(t instanceof String)){
 				logger.error("非基本类型集合");
 				return null;
 			}

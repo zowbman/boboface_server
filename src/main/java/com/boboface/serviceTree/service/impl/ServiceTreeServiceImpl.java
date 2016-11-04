@@ -2,14 +2,13 @@ package com.boboface.serviceTree.service.impl;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.OrderStyleEnum;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import tk.mybatis.mapper.entity.Example;
 
+import com.boboface.base.model.vo.OrderStyleEnum;
 import com.boboface.base.service.impl.BaseServiceImpl;
 import com.boboface.exception.CustomException;
 import com.boboface.serviceTree.model.po.TBobofaceServiceTree;

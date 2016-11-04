@@ -2,9 +2,8 @@ package com.boboface.ads.service;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.PageBean;
-
 import com.boboface.ads.model.po.TBobofaceAdsProject;
+import com.boboface.base.model.vo.PageBean;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
 

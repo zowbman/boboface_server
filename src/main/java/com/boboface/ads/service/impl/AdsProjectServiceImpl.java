@@ -2,9 +2,6 @@ package com.boboface.ads.service.impl;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.OrderStyleEnum;
-import net.zowbman.base.model.vo.PageBean;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,6 +13,8 @@ import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.po.TBobofaceAdsProject;
 import com.boboface.ads.model.po.TBobofaceAdsUntilscript;
 import com.boboface.ads.service.IAdsProjectService;
+import com.boboface.base.model.vo.OrderStyleEnum;
+import com.boboface.base.model.vo.PageBean;
 import com.boboface.base.service.impl.BaseServiceImpl;
 import com.boboface.exception.CustomException;
 import com.github.pagehelper.PageHelper;

@@ -4,8 +4,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import net.zowbman.base.data.type.conversion.date.DateDataTypeConversion;
-import net.zowbman.base.data.type.conversion.date.vo.DATEFORMAT;
+import com.boboface.base.data.type.conversion.DateDataTypeConversion;
+import com.boboface.base.data.type.conversion.vo.DATEFORMAT;
 
 /**
  * 

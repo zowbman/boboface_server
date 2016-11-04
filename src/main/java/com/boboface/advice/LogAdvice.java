@@ -2,8 +2,6 @@ package com.boboface.advice;
 
 import java.lang.annotation.Annotation;
 
-import net.zowbman.base.model.vo.PubRetrunMsg;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.boboface.base.model.vo.PubRetrunMsg;
 
 /**
  * 

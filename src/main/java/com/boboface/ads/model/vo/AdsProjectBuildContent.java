@@ -1,6 +1,6 @@
 package com.boboface.ads.model.vo;
 
-import net.zowbman.base.model.vo.EnvEnum;
+import com.boboface.base.model.vo.EnvEnum;
 
 /**
  * 

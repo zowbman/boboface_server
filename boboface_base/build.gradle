@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+version='1.0.0'
 
 repositories {
 	mavenCentral()
-    //maven {url "http://nexus.fanxing.kgidc.cn/nexus/content/groups/public/"}
 }
 
 dependencies {
@@ -13,12 +13,15 @@ dependencies {
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
 }
 
-task say <<{
-	println "hello world"
-}
-
 tasks.withType(JavaCompile) {  
     options.encoding = "UTF-8"  
+}
+
+
+task deploy(type: Sync, dependsOn: jar){
+    from configurations.compile
+    from jar.archivePath
+    into 'build/deploy'
 }
 
 jar.exclude 'logback-test.xml'

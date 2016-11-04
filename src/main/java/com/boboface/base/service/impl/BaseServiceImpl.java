@@ -3,9 +3,6 @@ package com.boboface.base.service.impl;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import net.zowbman.base.model.vo.OrderStyleEnum;
-import net.zowbman.base.model.vo.PageBean;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +14,8 @@ import com.boboface.ads.mapper.TBobofaceAdsProjectMapper;
 import com.boboface.ads.mapper.TBobofaceAdsServerMapper;
 import com.boboface.ads.mapper.TBobofaceAdsServerMapperCustom;
 import com.boboface.ads.mapper.TBobofaceAdsUntilscriptMapper;
+import com.boboface.base.model.vo.OrderStyleEnum;
+import com.boboface.base.model.vo.PageBean;
 import com.boboface.base.service.IBaseService;
 import com.boboface.exception.CustomException;
 import com.boboface.serviceTree.mapper.TBobofaceServiceTreeMapper;

@@ -2,10 +2,9 @@ package com.boboface.ads.service;
 
 import java.util.List;
 
-import net.zowbman.base.model.vo.EnvEnum;
-
 import com.boboface.ads.model.po.TBobofaceAdsContent;
 import com.boboface.ads.model.vo.AdsProjectBuildContent;
+import com.boboface.base.model.vo.EnvEnum;
 import com.boboface.base.service.IBaseService;
 
 /**

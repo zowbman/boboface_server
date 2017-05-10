@@ -6,9 +6,13 @@ build
 .tern-project
 .myeclipse
 work
+.idea
+*.iml
 boboface_base/.gradle
 boboface_base/.settings
 boboface_base/bin
 boboface_base/build
 boboface_base/.classpath
 boboface_base/work
+boboface_base/.idea
+boboface_base/*.iml
